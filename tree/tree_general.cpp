@@ -14,6 +14,9 @@ Node* NewNode(NodeType node_type, double val, Node* left, Node* right)
     new_node->left = left;
     new_node->right = right;
 
+    if (left != NULL)  left->parent = new_node;
+    if (right != NULL) right->parent = new_node;
+
     return new_node;
 }
 
@@ -79,20 +82,4 @@ bool IsLeaf(Node* node)
     assert(node);
 
     return (node->left == NULL && node->right == NULL);
-}
-
-void PrintTree(Node* root)
-{
-    assert(root);
-
-    printf("(");
-    printf("%s", root->val);
-
-    if (root->left) PrintTree(root->left);
-    else            printf("()");
-
-    if (root->right) PrintTree(root->right);
-    else            printf("()");
-
-    printf(")");
 }

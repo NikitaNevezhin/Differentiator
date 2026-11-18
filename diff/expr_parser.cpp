@@ -1,13 +1,19 @@
-#include "tree.h"
+#include "diff.h"
 
-#include <ctype.h>
-#include <string.h>
-
-bool IsNumber(const char* val)
+bool IsOperator(const char* val)
 {
     assert(val);
 
-    return IsStrDouble(val);
+    if (strlen(val) != 1) return false;
+
+    char operators[] = {'+', '-', '*', '/'};
+
+    for (size_t i = 0; i < sizeof(operators) / sizeof(char); i++)
+    {
+        if (val[0] == operators[i]) return true;
+    }
+
+    return false;
 }
 
 bool IsVariable(const char* val)
@@ -26,20 +32,11 @@ bool IsVariable(const char* val)
     return false;
 }
 
-bool IsOperator(const char* val)
+bool IsNumber(const char* val)
 {
     assert(val);
 
-    if (strlen(val) != 1) return false;
-
-    char operators[] = {'+', '-', '*', '/'};
-
-    for (size_t i = 0; i < sizeof(operators) / sizeof(char); i++)
-    {
-        if (val[0] == operators[i]) return true;
-    }
-
-    return false;
+    return IsStrDouble(val);
 }
 
 int ParseData(char* val_buff, FILE* tree_file)
@@ -48,11 +45,11 @@ int ParseData(char* val_buff, FILE* tree_file)
     assert(tree_file);
 
     int curr_val_idx = 0;
-    char curr_ch = fgetc(tree_file);
+    int  curr_ch = fgetc(tree_file);
 
-    while (curr_ch != '(' && curr_ch != ')')
+    while (curr_ch != EOF && curr_ch != '(' && curr_ch != ')')
     {
-        val_buff[curr_val_idx] = curr_ch;
+        val_buff[curr_val_idx] = (char)curr_ch;
         curr_val_idx++;
         curr_ch = fgetc(tree_file);
     }
@@ -77,18 +74,29 @@ int GetNodeInfo(const char* val_buff, NodeType* node_type, double* val)
         return 0;
     }
 
-    else if (IsOperator(val_buff))
+    if (strlen(val_buff) == 1)  // operator or variable
     {
-        *node_type = OP;
-        *val = val_buff[0] - '+';
-        return 0;
-    }
+        char symb = val_buff[0];
 
-    else if (IsVariable(val_buff))
-    {
-        *node_type = VAR;
-        *val = val_buff[0] - 'x';
-        return 0;
+        for (int i = 0; i < TOTAL_OPS; i++)
+        {
+            if (OP_TABLE[i].symbol == symb)
+            {
+                *node_type = OP;
+                *val = i;
+                return 0;
+            }
+        }
+
+        for (int i = 0; i < TOTAL_VARS; i++)
+        {
+            if (VARS[i] == symb)
+            {
+                *node_type = VAR;
+                *val = i;
+                return 0;
+            }
+        }
     }
 
     return 1;  // could not get value
@@ -98,17 +106,17 @@ Node* ParseSubtree(FILE* tree_file, int* total_nodes)
 {
     assert(tree_file);
     
-    char first_symb = fgetc(tree_file);
+    int first_symb = fgetc(tree_file);
 
     if (first_symb == '(')
     {   
-        char second_symb = fgetc(tree_file);
+        int second_symb = fgetc(tree_file);
         if (second_symb == ')') return NULL;  // empty subtree
         ungetc(second_symb, tree_file);
 
         (*total_nodes)++;
 
-        char* val_buff = (char*)calloc(256, sizeof(char));
+        char val_buff[256] = {};
         ParseData(val_buff, tree_file);
 
         NodeType node_type = NUM;
@@ -123,6 +131,7 @@ Node* ParseSubtree(FILE* tree_file, int* total_nodes)
         if (close_symb != ')') 
         {
             PRINT_RED("Parsing ERROR: expected ')', got '%c'\n", close_symb);
+            return NULL;
         }
 
         return NewNode(node_type, val, left_subtree, right_subtree);
@@ -153,18 +162,44 @@ int ParseTree(Tree* tree, const char* tree_filename)
     return 0;
 }
 
+void PrintTree(Node* root)
+{
+    assert(root);
+
+    char val_buff[VAL_MAX_SIZE] = {};
+    FormatNodeVal(root, val_buff);
+
+    printf("(");
+    printf("%s", val_buff);
+
+    if (root->left) PrintTree(root->left);
+    else            printf("()");
+
+    if (root->right) PrintTree(root->right);
+    else            printf("()");
+
+    printf(")");
+}
+
 void FprintTree(FILE* tree_file, Node* root)
 {
     assert(tree_file);
 
+    char val_buff[VAL_MAX_SIZE] = {};
+    FormatNodeVal(root, val_buff);
+
     fprintf(tree_file, "(");
-    fprintf(tree_file, "%s", root->val);
+    if (root->node_type == OP)
+        fprintf(tree_file, "%c", OP_TABLE[(int)root->val].symbol);
+    
+    else
+        fprintf(tree_file, "%s", val_buff);
 
     if (root->left) FprintTree(tree_file, root->left);
-    else            fprintf(tree_file, "()");
+    // else            fprintf(tree_file, "()");
 
     if (root->right) FprintTree(tree_file, root->right);
-    else             fprintf(tree_file, "()");
+    // else             fprintf(tree_file, "()");
 
     fprintf(tree_file, ")");
 }

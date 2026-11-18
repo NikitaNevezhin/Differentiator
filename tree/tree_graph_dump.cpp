@@ -1,15 +1,38 @@
 #include "tree.h"
 
-const char* GetStrNodeType(NodeType node_type)
+int FormatNodeVal(const Node* node, char* val_buff)
 {
-    switch(node_type)
-    {
-        case NUM: return "NUM";
-        case VAR: return "VAR";
-        case OP:  return "OP";
+    assert(node);
+    assert(val_buff);
 
-        default:  return "UNKNOWN";
+    switch (node->node_type)
+    {
+        case NUM:
+        {
+            sprintf(val_buff, "%lg", node->val);
+            break;
+        }
+
+        case VAR:
+        {
+            sprintf(val_buff, "%c", VARS[(int)node->val]);
+            break;
+        }
+
+        case OP:
+        {
+            int op_idx = (int)node->val;
+            if (op_idx < 0 || op_idx >= TOTAL_OPS) sprintf(val_buff, "%s", "UNKNOWN");
+
+            else sprintf(val_buff, "%s", OP_TABLE[op_idx].op_name);
+
+            break;
+        }
+
+        default: sprintf(val_buff, "%s", "UNKNOWN"); break;
     }
+
+    return 0;
 }
 
 int GenerateNodeDump(FILE* dot_file, const Node* node, int node_idx, int dump_counter) // rootGenerateDotFile helper func
@@ -17,23 +40,40 @@ int GenerateNodeDump(FILE* dot_file, const Node* node, int node_idx, int dump_co
     assert(dot_file);
     assert(node);
 
-    const char* bgcolor = "#FFFFE0"; // valid node
+    const char* type_name = "UNKNOWN";
+    const char* bgcolor = "#FFFFE0";
 
-    if (node->left == NULL && node->right == NULL) bgcolor = "#8FBC8F";
+    if (node->node_type >= 0 && node->node_type < TOTAL_NODE_TYPES)
+    {
+        type_name = NODE_TYPE_TABLE[node->node_type].type_name;
+        bgcolor = NODE_TYPE_TABLE[node->node_type].bgcolor; 
+    }
+
+    char val_buff[VAL_MAX_SIZE] = {};
+    FormatNodeVal(node, val_buff);
+
+    switch (node->node_type)
+    {
+        case NUM: bgcolor = "#E3F2FD"; break;
+        case VAR: bgcolor = "#E8F5E9"; break;
+        case OP:  bgcolor = "#FFF3E0"; break;
+
+        default:  bgcolor = "#FFFFE0";
+    }
 
     fprintf(
             dot_file, 
             "        d%d_node_%d [label=<\n"
             "            <TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" COLOR=\"#354733\" BGCOLOR=\"%s\" CELLPADDING=\"7\">\n"
-            "                <TR><TD COLSPAN=\"2\" ALIGN=\"CENTER\"><FONT POINT-SIZE=\"3\"><BR/></FONT>TYPE:%s<FONT POINT-SIZE=\"3\"><BR/></FONT></TD></TR>\n"
-            "                <TR><TD COLSPAN=\"2\" ALIGN=\"CENTER\"><FONT POINT-SIZE=\"3\"><BR/></FONT>VAL:%lg<FONT POINT-SIZE=\"3\"><BR/></FONT></TD></TR>\n"
+            "                <TR><TD COLSPAN=\"2\" ALIGN=\"CENTER\"><FONT POINT-SIZE=\"3\"><BR/></FONT>%s<FONT POINT-SIZE=\"3\"><BR/></FONT></TD></TR>\n"
+            "                <TR><TD COLSPAN=\"2\" ALIGN=\"CENTER\"><FONT POINT-SIZE=\"3\"><BR/></FONT>%s<FONT POINT-SIZE=\"3\"><BR/></FONT></TD></TR>\n"
             "                <TR>\n"
             "                    <TD PORT=\"l\" WIDTH=\"70\" ALIGN=\"CENTER\"><FONT POINT-SIZE=\"3\"><BR/></FONT>%p<FONT POINT-SIZE=\"3\"><BR/></FONT></TD>\n"
             "                    <TD PORT=\"r\" WIDTH=\"70\" ALIGN=\"CENTER\"><FONT POINT-SIZE=\"3\"><BR/></FONT>%p<FONT POINT-SIZE=\"3\"><BR/></FONT></TD>\n"
             "                </TR>\n"
             "            </TABLE>\n"
             "        >];\n\n",
-            dump_counter, node_idx, bgcolor, GetStrNodeType(node->node_type), node->val, node->left, node->right
+            dump_counter, node_idx, bgcolor, type_name, val_buff, node->left, node->right
     );
         
     return 0;
@@ -55,8 +95,8 @@ int GenerateTreeDump(FILE* dot_file, const Node* root, int* node_idx, int dump_c
         int left_idx = *node_idx; // left child index (saving it as it's gonna be lost in the next line)
         GenerateTreeDump(dot_file, root->left, node_idx, dump_counter);
         fprintf(dot_file, "        d%d_node_%d:l -> d%d_node_%d:n\n", dump_counter, curr_idx, dump_counter, left_idx);
-        // fprintf(dot_file, "        d%d_node_%d -> d%d_node_%d [color=\"#4169E1\", style=\"dashed\", constraint=false];\n", 
-        //         dump_counter, left_idx, dump_counter, curr_idx);
+        fprintf(dot_file, "        d%d_node_%d -> d%d_node_%d [color=\"#4169E1\", style=\"dashed\", constraint=false];\n", 
+                dump_counter, left_idx, dump_counter, curr_idx);
     }
 
     // else 
@@ -70,8 +110,8 @@ int GenerateTreeDump(FILE* dot_file, const Node* root, int* node_idx, int dump_c
         int right_idx = *node_idx; // right child index (saving it as it's gonna be lost in the next line)
         GenerateTreeDump(dot_file, root->right, node_idx, dump_counter);
         fprintf(dot_file, "        d%d_node_%d:r -> d%d_node_%d:n\n", dump_counter, curr_idx, dump_counter, right_idx);
-        // fprintf(dot_file, "        d%d_node_%d -> d%d_node_%d [color=\"#4169E1\", style=\"dashed\", constraint=false];\n", 
-        //         dump_counter, right_idx, dump_counter, curr_idx);
+        fprintf(dot_file, "        d%d_node_%d -> d%d_node_%d [color=\"#4169E1\", style=\"dashed\", constraint=false];\n", 
+                dump_counter, right_idx, dump_counter, curr_idx);
     }
 
     // else 
