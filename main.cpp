@@ -1,9 +1,11 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "tree/tree.h"
 
 int main(void)
 {
-    printf("Hello, world!\n");
+    Tree test_tree = {};
+    ParseTree(&test_tree, "math_expr.txt");
+
+    TREE_GRAPH_DUMP(&test_tree, "tree_dump.html");
 
     return EXIT_SUCCESS;
 }

@@ -1,27 +1,30 @@
 #include "tree.h"
 
-int NodeInit(TreeNode* node, TreeNode* parent, node_t data)
+Node* NewNode(NodeType node_type, double val, Node* left, Node* right)
 {
-    assert(node);
-    // parent is NULL -> node doesn't have a parent -> it is a root of the tree
+    Node* new_node = (Node*)calloc(1, sizeof(Node));
+    if (new_node == NULL)
+    {
+        PRINT_RED("callocation failure in %s\n", __func__);
+        return NULL;
+    }
 
-    node->parent = parent;
-    node->left = NULL;
-    node->right = NULL;
-    node->data = data;
+    new_node->node_type = node_type;
+    new_node->val = val;
+    new_node->left = left;
+    new_node->right = right;
 
-    return 0;
+    return new_node;
 }
 
-int NodeDestroy(TreeNode* node)
+int NodeDestroy(Node* node)
 {
     if (node == NULL) return 0;  // suppose it is destroyed
 
     NodeDestroy(node->left);
     NodeDestroy(node->right);
 
-    free(node->data);
-    node->data = POIZON;
+    node->val = POIZON;
 
     node->parent = NULL;
     node->left = NULL;
@@ -53,7 +56,7 @@ int TreeDestroy(Tree* tree)
     return 0;
 }
 
-int LinkLeft(TreeNode* parent, TreeNode* child)
+int LinkLeft(Node* parent, Node* child)
 {
     assert(parent);
 
@@ -62,7 +65,7 @@ int LinkLeft(TreeNode* parent, TreeNode* child)
     return 0;
 }
 
-int LinkRight(TreeNode* parent, TreeNode* child)
+int LinkRight(Node* parent, Node* child)
 {
     assert(parent);
 
@@ -71,19 +74,19 @@ int LinkRight(TreeNode* parent, TreeNode* child)
     return 0;
 }
 
-bool IsLeaf(TreeNode* node)
+bool IsLeaf(Node* node)
 {
     assert(node);
 
     return (node->left == NULL && node->right == NULL);
 }
 
-void PrintTree(TreeNode* root)
+void PrintTree(Node* root)
 {
     assert(root);
 
     printf("(");
-    printf("%s", root->data);
+    printf("%s", root->val);
 
     if (root->left) PrintTree(root->left);
     else            printf("()");
@@ -92,55 +95,4 @@ void PrintTree(TreeNode* root)
     else            printf("()");
 
     printf(")");
-}
-
-TreeNode* InsertRecursive(TreeNode* curr_node, TreeNode* parent, node_t data, int* total_nodes)
-{
-    if (curr_node == NULL) // end of tree - no better place to put a new node in
-    {
-        TreeNode* new_node = (TreeNode*)calloc(1, sizeof(TreeNode));
-        
-        if (!new_node)
-        {
-            PRINT_RED("calloc failure in %s\n", __func__);
-            return NULL;
-        }
-
-        NodeInit(new_node, parent, data);
-        (*total_nodes)++;
-
-        return new_node;
-    }
-
-    if (data < curr_node->data)  // then we must insert somewhere in left subtree
-    {
-        TreeNode* new_left = InsertRecursive(curr_node->left, curr_node, data, total_nodes);
-        LinkLeft(curr_node, new_left);
-    }
-
-    else if (data > curr_node->data)  // then we must insert somewhere in right subtree
-    {
-        TreeNode* new_right = InsertRecursive(curr_node->right, curr_node, data, total_nodes);
-        LinkRight(curr_node, new_right);
-    }
-
-    return curr_node;
-}
-
-int TreeInsert(Tree* tree, node_t data)
-{
-    assert(tree);
-
-    if (tree->root == NULL)
-    {
-        tree->root = (TreeNode*)calloc(1, sizeof(TreeNode));
-        NodeInit(tree->root, NULL, data);
-        tree->total_nodes++;
-        
-        return 0;
-    }
-
-    InsertRecursive(tree->root, NULL, data, &(tree->total_nodes));
-
-    return 0;
 }

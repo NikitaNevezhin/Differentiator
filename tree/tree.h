@@ -8,28 +8,63 @@
 #include <assert.h>
 
 #include "../utils/PrintColor.h"
+#include "../utils/StringTools.h"
 
-#define POIZON NULL
+// ---------------------------------------------
+//              General defines
+// ---------------------------------------------
+
+#define POIZON -1776.911
 
 #define TERM_CMD_MAX_SIZE 256  // idk, let it be 256
 
 #define TREE_GRAPH_DUMP(tree, html_filename) TreeGraphDump(tree, html_filename, __FILE__, __LINE__, __func__);
 
-typedef char* node_t;
+// ---------------------------------------------
+// DSL for convinient work with function NewNode
+// ---------------------------------------------
 
-struct TreeNode
+#define _NUM(val)           NewNode(NUM, val, NULL, NULL)
+#define _VAR(val)           NewNode(VAR, val, NULL, NULL)
+
+#define _ADD(left, right)   NewNode(OP, (double)ADD, left, right)
+#define _SUB(left, right)   NewNode(OP, (double)SUB, left, right)
+#define _MUL(left, right)   NewNode(OP, (double)MUL, left, right)
+#define _DIV(left, right)   NewNode(OP, (double)DIV, left, right)
+
+
+
+typedef double node_t;
+
+enum NodeType
 {
-    node_t data;
+    OP,
+    NUM,
+    VAR
+};
 
-    TreeNode* left;
-    TreeNode* right;
+enum Operation
+{
+    ADD,
+    SUB,
+    MUL,
+    DIV
+};
 
-    TreeNode* parent;
+struct Node
+{
+    NodeType node_type;
+    double val;
+
+    Node* left;
+    Node* right;
+
+    Node* parent;
 };
 
 struct Tree
 {
-    TreeNode* root;
+    Node* root;
     int total_nodes;
 };
 
@@ -37,53 +72,58 @@ struct Tree
 //   GENERAL TOOLS
 // -----------------
 
-int          NodeInit            (TreeNode* node, TreeNode* parent, node_t data);
+Node*        NewNode             (NodeType node_type, double val, Node* left, Node* right);
  
-int          NodeDestroy         (TreeNode* node);
+int          NodeDestroy         (Node* node);
 
 int          TreeInit            (Tree* tree);
 
 int          TreeDestroy         (Tree* tree);
  
-int          LinkLeft            (TreeNode* parent, TreeNode* child);
+int          LinkLeft            (Node* parent, Node* child);
 
-int          LinkRight           (TreeNode* parent, TreeNode* child);
+int          LinkRight           (Node* parent, Node* child);
 
-bool         IsLeaf              (TreeNode* node);
+bool         IsLeaf              (Node* node);
  
-void         PrintTree           (TreeNode* root);
-  
-TreeNode*    InsertRecursive     (TreeNode* curr_node, TreeNode* parent, node_t data, int* total_nodes);
- 
-int          TreeInsert          (Tree* tree, node_t data);
-
+void         PrintTree           (Node* root);
+   
 // ------------------
 //  TREE-FILE PARSER
 // ------------------
 
+bool         IsOperator          (const char* s);
+
+bool         IsVariable          (const char* s);
+
+bool         IsNumber            (const char* val);
+
 int          ParseData           (char* data_buff, FILE* tree_file);
 
-TreeNode*    ParseSubtree        (TreeNode* parent, FILE* tree_file, int* total_nodes);
+int          GetNodeInfo         (const char* val_buff, NodeType* node_type, double* val);
+
+Node*        ParseSubtree        (FILE* tree_file, int* total_nodes);
 
 int          ParseTree           (Tree* tree, const char* tree_filename);
 
-void         FprintTree          (FILE* tree_file, TreeNode* root);
+void         FprintTree          (FILE* tree_file, Node* root);
 
 // ------------------
 // GRAPH DUMP SECTION
 // ------------------
 
-int     GenerateNodeDump        (FILE* dot_file, const TreeNode* node, int node_idx, int dump_counter);
+const char*     GetStrNodeType          (NodeType node_type);
 
-int     GenerateTreeDump        (FILE* dot_file, const TreeNode* root, int* node_idx, int dump_counter);
-
-int     GenerateDotFile         (TreeNode* root, const char* dot_filename, int dump_counter);
-
-int     TreeGenerateHtmlFile    (Tree* tree,  const char* html_filename, 
-                                 const char* file, int line, const char* func);
-
-int     TreeGraphDump           (Tree* tree, const char* html_filename, 
-                                 const char* file, int line, const char* func);
-
+int             GenerateNodeDump        (FILE* dot_file, const Node* node, int node_idx, int dump_counter);
+        
+int             GenerateTreeDump        (FILE* dot_file, const Node* root, int* node_idx, int dump_counter);
+        
+int             GenerateDotFile         (Node* root, const char* dot_filename, int dump_counter);
+        
+int             TreeGenerateHtmlFile    (Tree* tree,  const char* html_filename, 
+                                         const char* file, int line, const char* func);
+        
+int             TreeGraphDump           (Tree* tree, const char* html_filename, 
+                                         const char* file, int line, const char* func);
                                  
 #endif

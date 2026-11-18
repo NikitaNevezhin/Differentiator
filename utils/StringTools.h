@@ -2,9 +2,13 @@
 
 #define STRING_TOOLS_H
 
+#include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <errno.h>
 
-int IgnoreCaseStrcmp(const char* s1, const char* s2);
+int     IgnoreCaseStrcmp    (const char* s1, const char* s2);
+
+bool    IsStrDouble         (const char *str);
 
 #endif

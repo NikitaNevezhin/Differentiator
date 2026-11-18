@@ -9,3 +9,21 @@ int IgnoreCaseStrcmp(const char* s1, const char* s2)
 
     return (int)(s1[i]) - (int)(s2[i]);
 }
+
+bool IsStrDouble(const char *s) 
+{
+    if (s == NULL || *s == '\0') {
+        return false;
+    }
+
+    errno = 0;
+    char *endptr = NULL;
+    strtod(s, &endptr);
+
+    if (endptr == s || *endptr != '\0') 
+    {
+        return false;
+    }
+
+    return true;
+}
