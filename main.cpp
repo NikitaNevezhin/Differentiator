@@ -7,9 +7,7 @@ int main(void)
 
     TREE_GRAPH_DUMP(&test_tree, "dump/tree_dump.html");
 
-    FILE* file = fopen("data/test_fprint.txt", "w");
-    FprintTree(file, test_tree.root);
-    fclose(file);
+    printf("%lg\n", CalcTree(test_tree.root));
 
     return EXIT_SUCCESS;
 }

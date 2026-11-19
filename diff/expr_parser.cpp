@@ -1,44 +1,5 @@
 #include "diff.h"
 
-bool IsOperator(const char* val)
-{
-    assert(val);
-
-    if (strlen(val) != 1) return false;
-
-    char operators[] = {'+', '-', '*', '/'};
-
-    for (size_t i = 0; i < sizeof(operators) / sizeof(char); i++)
-    {
-        if (val[0] == operators[i]) return true;
-    }
-
-    return false;
-}
-
-bool IsVariable(const char* val)
-{
-    assert(val);
-
-    if (strlen(val) != 1) return false;
-
-    char variables[] = {'x', 'y', 'z'};
-
-    for (size_t i = 0; i < sizeof(variables) / sizeof(char); i++)
-    {
-        if (val[0] == variables[i]) return true;
-    }
-
-    return false;
-}
-
-bool IsNumber(const char* val)
-{
-    assert(val);
-
-    return IsStrDouble(val);
-}
-
 int ParseData(char* val_buff, FILE* tree_file)
 {
     assert(val_buff);

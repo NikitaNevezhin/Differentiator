@@ -4,7 +4,7 @@
 
 #include "FloatTools.h"
 
-bool FloatEqual(const double x, const double y)
+bool IsFloatEqual(const double x, const double y)
 {
     return fabs(x - y) < ACCURACY;
 }

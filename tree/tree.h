@@ -49,7 +49,7 @@ enum NodeType
     OP
 };
 
-enum Operation
+enum OpType
 {
     ADD,
     SUB,
@@ -99,7 +99,7 @@ const NodeTypeInfo NODE_TYPE_TABLE[TOTAL_NODE_TYPES] =
 
 struct OpInfo
 {
-    Operation op;
+    OpType op;
     char symbol;
     const char* op_name;
 };

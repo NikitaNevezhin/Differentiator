@@ -4,6 +4,8 @@
 
 #include <ctype.h>
 #include <string.h>
+#include <math.h>
+#include "../utils/FloatTools.h"
 
 #include "../tree/tree.h"
 
@@ -19,16 +21,21 @@
 #define _MUL(left, right)   NewNode(OP, (double)MUL, left, right)
 #define _DIV(left, right)   NewNode(OP, (double)DIV, left, right)
 
+// -------------------------------------------
+//          VALUES FOR VARIABLES
+// -------------------------------------------
+
+const double VAR_VALUES[TOTAL_VARS]
+{
+    5,
+    NAN,
+    NAN
+};
+
 
 // -------------------------------------------
 //         EXPRESSION PARSER SECTION
 // -------------------------------------------
-
-bool         IsOperator          (const char* s);
-
-bool         IsVariable          (const char* s);
-
-bool         IsNumber            (const char* val);
 
 int          ParseData           (char* data_buff, FILE* tree_file);
 
@@ -53,6 +60,8 @@ void         FprintTree          (FILE* tree_file, Node* root);
 //            EVALUATOR SECTION
 // -------------------------------------------
 
-// ;
+double       CalcOp              (OpType op_type, double a, double b);
+
+double       CalcTree            (Node* root);
 
 #endif
