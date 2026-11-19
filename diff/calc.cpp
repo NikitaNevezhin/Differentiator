@@ -23,7 +23,9 @@ double CalcOp(OpType op_type, double a, double b)
                 res = NAN;
                 PRINT_RED("ZERO DIVISION ERROR\n");
             }
+
             else res = a / b;
+            
             break;
         }
         
