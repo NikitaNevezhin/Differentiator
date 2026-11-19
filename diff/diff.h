@@ -28,8 +28,8 @@
 const double VAR_VALUES[TOTAL_VARS]
 {
     5,
-    NAN,
-    NAN
+    2,
+    3
 };
 
 

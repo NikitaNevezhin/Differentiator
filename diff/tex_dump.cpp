@@ -98,12 +98,16 @@ int TreeTexDump(Tree* tree, const char* tex_filename)
 
     fprintf(tex_file, "\\begin{document}\n\n");
 
+    fprintf(tex_file, "$");
     TexDumpNode(tex_file, tree->root);
+    fprintf(tex_file, "$");
 
     fprintf(tex_file, "\n\n");
     fprintf(tex_file, "\\end{document}\n");
 
     fclose(tex_file);
+
+    system("pdflatex -interaction=nonstopmode -output-directory=dump dump/tex_dump.tex > nul");
 
     return 0;
 }
