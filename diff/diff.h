@@ -10,16 +10,22 @@
 #include "../tree/tree.h"
 
 // -------------------------------------------
-// DSL for convinient work with function diff
+// DSL for convinient work with function Diff
 // -------------------------------------------
 
-#define _NUM(val)           NewNode(NUM, val, NULL, NULL)
-#define _VAR(val)           NewNode(VAR, val, NULL, NULL)
+#define     _NUM(val)           NewNode(NUM, val, NULL, NULL)
+#define     _VAR(val)           NewNode(VAR, val, NULL, NULL)
 
-#define _ADD(left, right)   NewNode(OP, (double)ADD, left, right)
-#define _SUB(left, right)   NewNode(OP, (double)SUB, left, right)
-#define _MUL(left, right)   NewNode(OP, (double)MUL, left, right)
-#define _DIV(left, right)   NewNode(OP, (double)DIV, left, right)
+#define     _ADD(left, right)   NewNode(OP, (double)ADD, left, right)
+#define     _SUB(left, right)   NewNode(OP, (double)SUB, left, right)
+#define     _MUL(left, right)   NewNode(OP, (double)MUL, left, right)
+#define     _DIV(left, right)   NewNode(OP, (double)DIV, left, right)
+
+#define     _DL                 Diff(node->left)
+#define     _DR                 Diff(node->right)
+
+#define     _CL                 CopySubtree(node->left)
+#define     _CR                 CopySubtree(node->right)
 
 // -------------------------------------------
 //          VALUES FOR VARIABLES
@@ -53,8 +59,7 @@ void         FprintTree          (FILE* tree_file, Node* root);
 //          DIFFERENTIATOR SECTION
 // -------------------------------------------
 
-//;
-
+Node*        Diff                (const Node* node);
 
 // -------------------------------------------
 //            EVALUATOR SECTION

@@ -83,3 +83,13 @@ bool IsLeaf(Node* node)
 
     return (node->left == NULL && node->right == NULL);
 }
+
+Node* CopySubtree(Node* node)
+{
+    if (node == NULL) return NULL;
+
+    Node* left_subtree = CopySubtree(node->left);
+    Node* right_subtree = CopySubtree(node->right);
+
+    return NewNode(node->node_type, node->val, left_subtree, right_subtree);
+}

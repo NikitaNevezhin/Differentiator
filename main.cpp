@@ -8,9 +8,12 @@ int main(void)
 
     TREE_GRAPH_DUMP(&test_tree, "dump/tree_dump.html");
 
-    printf("%lg\n", CalcTree(test_tree.root));
+    Tree diff_tree = {};
+    TreeInit(&diff_tree);
 
-    TreeTexDump(&test_tree, "dump/tex_dump.tex");
+    diff_tree.root = Diff(test_tree.root);
+
+    TreeTexDump(&diff_tree, "dump/tex_dump.tex");
 
     return EXIT_SUCCESS;
 }

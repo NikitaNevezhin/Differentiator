@@ -130,6 +130,8 @@ int          LinkRight           (Node* parent, Node* child);
 
 bool         IsLeaf              (Node* node);
 
+Node*        CopySubtree         (Node* root);
+
 // ------------------
 // GRAPH DUMP SECTION
 // ------------------
