@@ -43,17 +43,21 @@ const double VAR_VALUES[TOTAL_VARS]
 //         EXPRESSION PARSER SECTION
 // -------------------------------------------
 
-int          ParseData           (char* data_buff, FILE* tree_file);
-
-int          GetNodeInfo         (const char* val_buff, NodeType* node_type, double* val);
-
-Node*        ParseSubtree        (FILE* tree_file, int* total_nodes);
-
-int          ParseTree           (Tree* tree, const char* tree_filename);
-
-void         PrintTree           (Node* root);
-
-void         FprintTree          (FILE* tree_file, Node* root);
+int          ParseData              (char* data_buff, FILE* tree_file);
+    
+int          GetNodeInfo            (const char* val_buff, NodeType* node_type, double* val);
+    
+Node*        ParsePrefixSubtree     (FILE* tree_file, int* total_nodes);
+    
+Node*        ParseInfixSubtree      (FILE* tree_file, int* total_nodes);
+    
+int          ParsePrefixTree        (Tree* tree, const char* tree_filename);
+    
+int          ParseInfixTree         (Tree* tree, const char* tree_filename);
+    
+void         PrintTree              (Node* root);
+    
+void         FprintTree             (FILE* tree_file, Node* root);
 
 // -------------------------------------------
 //          DIFFERENTIATOR SECTION

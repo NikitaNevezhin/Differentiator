@@ -8,7 +8,7 @@ int ParseData(char* val_buff, FILE* tree_file)
     int curr_val_idx = 0;
     int  curr_ch = fgetc(tree_file);
 
-    while (curr_ch != EOF && curr_ch != '(' && curr_ch != ')')
+    while (curr_ch != EOF && curr_ch != '(' && curr_ch != ')' && curr_ch != '+' && curr_ch != '-' && curr_ch != '*' && curr_ch != '/')
     {
         val_buff[curr_val_idx] = (char)curr_ch;
         curr_val_idx++;
@@ -63,7 +63,7 @@ int GetNodeInfo(const char* val_buff, NodeType* node_type, double* val)
     return 1;  // could not get value
 }
 
-Node* ParseSubtree(FILE* tree_file, int* total_nodes)
+Node* ParsePrefixSubtree(FILE* tree_file, int* total_nodes)
 {
     assert(tree_file);
     
@@ -84,8 +84,8 @@ Node* ParseSubtree(FILE* tree_file, int* total_nodes)
         double val = 0;
         GetNodeInfo(val_buff, &node_type, &val);
 
-        Node* left_subtree = ParseSubtree(tree_file, total_nodes);
-        Node* right_subtree = ParseSubtree(tree_file, total_nodes);
+        Node* left_subtree = ParsePrefixSubtree(tree_file, total_nodes);
+        Node* right_subtree = ParsePrefixSubtree(tree_file, total_nodes);
 
         int close_symb = fgetc(tree_file);
 
@@ -103,7 +103,59 @@ Node* ParseSubtree(FILE* tree_file, int* total_nodes)
     return NULL;
 }
 
-int ParseTree(Tree* tree, const char* tree_filename)
+Node* ParseInfixSubtree(FILE* tree_file, int* total_nodes)
+{
+    assert(tree_file);
+
+    int first_symb = fgetc(tree_file);
+
+    // (left_shit) op (right_shit)
+    // where (left_shit) is (left_left_shit) op (right_left_shit)
+    // etc
+
+    // RECURSIVE CASE
+    if (first_symb == '(')
+    {
+        Node* left_subtree = ParseInfixSubtree(tree_file, total_nodes);
+
+        char op_buff[VAL_MAX_SIZE] = {};
+        int op_symb = fgetc(tree_file);
+        op_buff[0] = op_symb;
+
+        NodeType node_type = OP;
+        double val = 0;
+        GetNodeInfo(op_buff, &node_type, &val);
+
+        Node* right_subtree = ParseInfixSubtree(tree_file, total_nodes);
+
+        int close_symb = fgetc(tree_file);
+
+        if (close_symb != ')') 
+        {
+            PRINT_RED("Parsing ERROR: expected ')', got '%c'\n", close_symb);
+            return NULL;
+        }
+
+        (*total_nodes)++;
+        return NewNode(node_type, val, left_subtree, right_subtree);
+    }
+
+    // BASE CASE (NUM and VAR are always leaves)
+
+    ungetc(first_symb, tree_file);
+
+    char val_buff[256] = {};
+    ParseData(val_buff, tree_file);
+
+    NodeType node_type = NUM;
+    double val = 0;
+    GetNodeInfo(val_buff, &node_type, &val);
+
+    (*total_nodes)++;
+    return NewNode(node_type, val, NULL, NULL);
+}
+
+int ParsePrefixTree(Tree* tree, const char* tree_filename)
 {
     assert(tree);
     assert(tree_filename);
@@ -116,7 +168,27 @@ int ParseTree(Tree* tree, const char* tree_filename)
         return 1;
     }
 
-    tree->root = ParseSubtree(tree_file, &tree->total_nodes);
+    tree->root = ParsePrefixSubtree(tree_file, &tree->total_nodes);
+
+    fclose(tree_file);
+
+    return 0;
+}
+
+int ParseInfixTree(Tree* tree, const char* tree_filename)
+{
+    assert(tree);
+    assert(tree_filename);
+
+    FILE* tree_file = fopen(tree_filename, "r");
+
+    if (tree_file == NULL)
+    {
+        PRINT_RED("fopen failed in %s\n", __func__);
+        return 1;
+    }
+
+    tree->root = ParseInfixSubtree(tree_file, &tree->total_nodes);
 
     fclose(tree_file);
 
