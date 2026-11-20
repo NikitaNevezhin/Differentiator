@@ -3,6 +3,8 @@
 
 int main(void)
 {
+    double var_values[TOTAL_VARS] = {1, 2, 3};
+
     Tree test_tree = {};
     ParseInfixTree(&test_tree, "data/math_expr.txt");
 
@@ -12,6 +14,8 @@ int main(void)
     TreeInit(&diff_tree);
 
     diff_tree.root = Diff(test_tree.root);
+
+    printf("%lg\n", CalcTree(diff_tree.root, var_values));
 
     TreeTexDump(&diff_tree, "dump/tex_dump.tex");
 

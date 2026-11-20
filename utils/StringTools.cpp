@@ -27,3 +27,22 @@ bool IsStrDouble(const char *s)
 
     return true;
 }
+
+bool IsSpace(const char symb)
+{
+    return (symb == ' ' || symb == '\t');
+}
+
+int SkipSpaces(FILE* file)
+{
+    assert(file);
+
+    int curr_symb = fgetc(file);
+
+    while (curr_symb != EOF && IsSpace(curr_symb))
+        curr_symb = fgetc(file);
+
+    ungetc(curr_symb, file);
+    
+    return 0;
+}

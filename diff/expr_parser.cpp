@@ -5,11 +5,13 @@ int ParseData(char* val_buff, FILE* tree_file)
     assert(val_buff);
     assert(tree_file);
 
+    SkipSpaces(tree_file);
+
     int curr_val_idx = 0;
     int  curr_ch = fgetc(tree_file);
 
-    while (curr_ch != EOF && curr_ch != '(' && curr_ch != ')' && curr_ch != '+' && curr_ch != '-' && curr_ch != '*' && curr_ch != '/')
-    {
+    while (curr_ch != EOF && curr_ch != '(' && curr_ch != ')' && curr_ch != '+' && curr_ch != '-' && curr_ch != '*' && curr_ch != '/' && curr_ch != ' ')
+    {  // TODO: too much of hard code
         val_buff[curr_val_idx] = (char)curr_ch;
         curr_val_idx++;
         curr_ch = fgetc(tree_file);
@@ -107,6 +109,7 @@ Node* ParseInfixSubtree(FILE* tree_file, int* total_nodes)
 {
     assert(tree_file);
 
+    SkipSpaces(tree_file);
     int first_symb = fgetc(tree_file);
 
     // (left_shit) op (right_shit)
@@ -114,10 +117,13 @@ Node* ParseInfixSubtree(FILE* tree_file, int* total_nodes)
     // etc
 
     // RECURSIVE CASE
+
     if (first_symb == '(')
     {
+        SkipSpaces(tree_file);
         Node* left_subtree = ParseInfixSubtree(tree_file, total_nodes);
 
+        SkipSpaces(tree_file);
         char op_buff[VAL_MAX_SIZE] = {};
         int op_symb = fgetc(tree_file);
         op_buff[0] = op_symb;
@@ -126,6 +132,7 @@ Node* ParseInfixSubtree(FILE* tree_file, int* total_nodes)
         double val = 0;
         GetNodeInfo(op_buff, &node_type, &val);
 
+        SkipSpaces(tree_file);
         Node* right_subtree = ParseInfixSubtree(tree_file, total_nodes);
 
         int close_symb = fgetc(tree_file);
@@ -146,6 +153,7 @@ Node* ParseInfixSubtree(FILE* tree_file, int* total_nodes)
 
     char val_buff[256] = {};
     ParseData(val_buff, tree_file);
+    SkipSpaces(tree_file);
 
     NodeType node_type = NUM;
     double val = 0;

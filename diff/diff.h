@@ -31,14 +31,6 @@
 //          VALUES FOR VARIABLES
 // -------------------------------------------
 
-const double VAR_VALUES[TOTAL_VARS]
-{
-    5,
-    2,
-    3
-};
-
-
 // -------------------------------------------
 //         EXPRESSION PARSER SECTION
 // -------------------------------------------
@@ -66,11 +58,11 @@ void         FprintTree             (FILE* tree_file, Node* root);
 Node*        Diff                (const Node* node);
 
 // -------------------------------------------
-//            EVALUATOR SECTION
+//           CALCULATOR SECTION
 // -------------------------------------------
 
 double       CalcOp              (OpType op_type, double a, double b);
 
-double       CalcTree            (Node* root);
+double       CalcTree            (Node* root, const double* var_values);
 
 #endif

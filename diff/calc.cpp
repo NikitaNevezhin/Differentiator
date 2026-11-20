@@ -36,7 +36,7 @@ double CalcOp(OpType op_type, double a, double b)
     return res;
 }
 
-double CalcTree(Node* root)
+double CalcTree(Node* root, const double* var_values)
 {
     assert(root);
 
@@ -49,12 +49,13 @@ double CalcTree(Node* root)
 
         case VAR:
         {
-            return VAR_VALUES[(int)root->val];
+            return var_values[(int)root->val];
         }
 
         case OP:
         {
-            return CalcOp((OpType)root->val, CalcTree(root->left), CalcTree(root->right));
+            return CalcOp((OpType)root->val, 
+                           CalcTree(root->left, var_values), CalcTree(root->right, var_values));
         }
 
         default: return NAN;
