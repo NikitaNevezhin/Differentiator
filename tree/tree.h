@@ -20,7 +20,7 @@
 #define VAL_MAX_SIZE 256       // still no idea what to choose
 
 #define TOTAL_NODE_TYPES 3
-#define TOTAL_OPS 4
+#define TOTAL_OPS 5
 #define TOTAL_VARS 3
 
 #define TREE_GRAPH_DUMP(tree, html_filename) TreeGraphDump(tree, html_filename, __FILE__, __LINE__, __func__);
@@ -42,6 +42,7 @@ enum OpType
     SUB,
     MUL,
     DIV,
+    POW,
     OP_NONE
 };
 
@@ -120,7 +121,8 @@ const OpInfo OP_TABLE[TOTAL_OPS] =
     {ADD, '+', "ADD"},              // USER!!!!!!!!!!!
     {SUB, '-', "SUB"},              // DONT CHANGE THE ORDER!!!!!
     {MUL, '*', "MUL"},              // GET THE FUCK OUT!!!!!!!!!!
-    {DIV, '/', "DIV"}               // please
+    {DIV, '/', "DIV"},               // please
+    {POW, '^', "POW"}
 };
 
 // -----------------

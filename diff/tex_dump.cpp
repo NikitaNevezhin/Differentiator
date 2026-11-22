@@ -77,6 +77,18 @@ int TexDumpNode(FILE* tex_file, Node* node)
                     break;
                 }
 
+                case POW:
+                {
+                    fprintf(tex_file, "\\left(");
+                    TexDumpNode(tex_file, node->left);
+                    fprintf(tex_file, "\\right)");
+                    fprintf(tex_file, "^");
+                    fprintf(tex_file, "\\left{");
+                    TexDumpNode(tex_file, node->right);
+                    fprintf(tex_file, "\\right}");
+                    break;
+                }
+
                 default: return 1;
             }
         }

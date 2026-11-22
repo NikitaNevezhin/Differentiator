@@ -6,23 +6,24 @@
 int main(void)
 {
     double var_values[TOTAL_VARS] = {};
-    var_values[VAR_X] = 1;
-    var_values[VAR_Y] = 2;
-    var_values[VAR_Z] = 3;
+    var_values[VAR_X] = 2;
+    var_values[VAR_Y] = 3;
+    var_values[VAR_Z] = 5;
 
     Tree test_tree = {};
     ParseTree(&test_tree, "data/math_expr.txt");
 
     TREE_GRAPH_DUMP(&test_tree, "dump/tree_dump.html");
+    TreeTexDump(&test_tree, "dump/tex_dump.tex");
 
     Tree diff_tree = {};
     TreeInit(&diff_tree);
 
-    diff_tree.root = Diff(test_tree.root, VAR_Y);
+    diff_tree.root = Diff(Diff(test_tree.root, VAR_X), VAR_Y);
 
-    printf("%lg\n", CalcTree(diff_tree.root, var_values));
+    printf("%lg\n", CalcTree(test_tree.root, var_values));
 
-    TreeTexDump(&diff_tree, "dump/tex_dump.tex");
+    // TreeTexDump(&diff_tree, "dump/tex_dump.tex");
 
     TreeDestroy(&test_tree);
     TreeDestroy(&diff_tree);

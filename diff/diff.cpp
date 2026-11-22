@@ -7,16 +7,33 @@
 #define     _NUM(val)           NewNode(NUM, {val, OP_NONE, VAR_NONE }, NULL, NULL)
 #define     _VAR(val)           NewNode(VAR, {NAN, OP_NONE,      val }, NULL, NULL)
 
-#define     _ADD(left, right)   NewNode(OP, {NAN, ADD, VAR_NONE}, left, right)
-#define     _SUB(left, right)   NewNode(OP, {NAN, SUB, VAR_NONE}, left, right)
-#define     _MUL(left, right)   NewNode(OP, {NAN, MUL, VAR_NONE}, left, right)
-#define     _DIV(left, right)   NewNode(OP, {NAN, DIV, VAR_NONE}, left, right)
+#define     _ADD(left, right)   NewNode(OP,  {NAN, ADD, VAR_NONE},  left, right)
+#define     _SUB(left, right)   NewNode(OP,  {NAN, SUB, VAR_NONE},  left, right)
+#define     _MUL(left, right)   NewNode(OP,  {NAN, MUL, VAR_NONE},  left, right)
+#define     _DIV(left, right)   NewNode(OP,  {NAN, DIV, VAR_NONE},  left, right)
+#define     _POW(left, right)   NewNode(OP,  {NAN, POW, VAR_NONE},  left, right)
 
 #define     _DL                 Diff(node->left, diff_var)
 #define     _DR                 Diff(node->right, diff_var)
 
 #define     _CL                 CopySubtree(node->left)
 #define     _CR                 CopySubtree(node->right)
+
+// --------------------------------
+//        HELPER FUNCTIONS
+// --------------------------------
+
+static bool ContainsDiffVar(const Node* node, VarIdx diff_var);
+
+
+static bool ContainsDiffVar(const Node* node, VarIdx diff_var)
+{
+    if (node == NULL) return false;
+
+    if (node->node_type == VAR) return node->val.var_idx == diff_var;
+
+    return ContainsDiffVar(node->left, diff_var) || ContainsDiffVar(node->right, diff_var);
+}
 
 
 Node* Diff(const Node* node, VarIdx diff_var)
@@ -43,6 +60,23 @@ Node* Diff(const Node* node, VarIdx diff_var)
                 case MUL: return _ADD(_MUL(_DL, _CR), _MUL(_CL, _DR));
 
                 case DIV: return _DIV(_SUB(_MUL(_DL, _CR), _MUL(_CL, _DR)), _MUL(_CR, _CR));
+
+                case POW:
+                {
+                    if (ContainsDiffVar(node->right, diff_var))
+                    {
+                        PRINT_RED("Exponent functions diff is still in process!\n");
+                        return NULL;
+                    }
+
+                    if (ContainsDiffVar(node->left, diff_var))
+                    {
+                        // diff(f^c) = diff(f) * f ^ (c - 1)
+                        return _MUL(_DL, _MUL(_CR, _POW(_CL, _SUB(_CR, _NUM(1)))));
+                    }
+
+                    return _NUM(0); // const ^ const
+                }
 
                 default: return NULL;
             }

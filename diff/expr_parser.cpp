@@ -42,11 +42,13 @@ static int          TokenCtor              (Token* token, const char* val_buff);
 
 static int          Tokenize               (const char* file_buff, TokenList* token_list);
 
-static Node*        ParseExpression        (TokenList* token_list, int* total_nodex);
+static Node*        ParseExpression        (TokenList* token_list, int* total_nodes);
 
-static Node*        ParseTerm              (TokenList* token_list, int* total_nodex);
+static Node*        ParseTerm              (TokenList* token_list, int* total_nodes);
 
-static Node*        ParseFactor            (TokenList* token_list, int* total_nodex);
+static Node*        ParsePower             (TokenList* token_list, int* total_nodes);
+
+static Node*        ParseFactor            (TokenList* token_list, int* total_nodes);
 
 
 int TokenCtor(Token* token, const char* val_buff)
@@ -158,7 +160,7 @@ int Tokenize(const char* file_buff, TokenList* token_list)
         {
             char num_buff[256] = {};
             int curr_idx = 0;
-            while (isdigit(*file_buff))
+            while (isdigit(*file_buff) || *file_buff == '.')
             {
                 num_buff[curr_idx] = *file_buff;
                 curr_idx++;
@@ -240,7 +242,7 @@ Node* ParseFactor(TokenList* token_list, int* total_nodes)
     }
 }
 
-Node* ParseTerm(TokenList* token_list, int* total_nodes)
+Node* ParsePower(TokenList* token_list, int* total_nodes)
 {
     assert(token_list);
     assert(total_nodes);
@@ -248,12 +250,35 @@ Node* ParseTerm(TokenList* token_list, int* total_nodes)
     Node* left = ParseFactor(token_list, total_nodes);
     if (left == NULL) return NULL;
 
+    if (IsCurrTokenOp(token_list, POW))
+    {
+        NodeVal op_val = token_list->data[token_list->pos].token_value;
+        token_list->pos++;
+
+        Node* right = ParsePower(token_list, total_nodes);
+        if (right == NULL) return NULL;
+
+        (*total_nodes)++;
+        left = NewNode(OP, op_val, left, right);
+    }
+
+    return left;
+}
+
+Node* ParseTerm(TokenList* token_list, int* total_nodes)
+{
+    assert(token_list);
+    assert(total_nodes);
+
+    Node* left = ParsePower(token_list, total_nodes);
+    if (left == NULL) return NULL;
+
     while (IsCurrTokenOp(token_list, DIV) || IsCurrTokenOp(token_list, MUL))
     {
         NodeVal op_val = token_list->data[token_list->pos].token_value;
         token_list->pos++;
 
-        Node* right = ParseFactor(token_list, total_nodes);
+        Node* right = ParsePower(token_list, total_nodes);
         if (right == NULL) return NULL;
 
         (*total_nodes)++;

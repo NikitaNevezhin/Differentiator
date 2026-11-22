@@ -35,7 +35,9 @@ double CalcOp(OpType op_type, double a, double b)
             
             break;
         }
-        
+
+        case POW: res = pow(a, b);
+                  break;
 
         default: res = NAN;
     }
