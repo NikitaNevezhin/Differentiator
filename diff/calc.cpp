@@ -1,4 +1,11 @@
-#include "diff.h"
+#include "calc.h"
+
+// --------------------------------
+//        HELPER FUNCTIONS
+// --------------------------------
+
+static double       CalcOp              (OpType op_type, double a, double b);
+
 
 double CalcOp(OpType op_type, double a, double b)
 {

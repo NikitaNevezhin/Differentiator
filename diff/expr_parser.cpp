@@ -1,5 +1,54 @@
 #include "expr_parser.h"
 
+// --------------------------------
+//        HELPER STRUCTURES
+// --------------------------------
+
+enum TokenType
+{
+    TOKEN_NUM,
+    TOKEN_VAR,
+    TOKEN_OP,
+    TOKEN_LPAREN,
+    TOKEN_RPAREN,
+    TOKEN_END
+};
+
+struct Token
+{
+    TokenType token_type;
+    NodeVal token_value;
+};
+
+struct TokenList
+{
+    Token* data;  // all tokens
+    int size;     // actual amount of tokens
+    int capacity; // memory allocated for data
+    int pos;      // token, parser currently works on
+};
+
+// --------------------------------
+//        HELPER FUNCTIONS
+// --------------------------------
+
+static int          TokenListCtor          (TokenList* token_list, int capacity);
+
+static int          TokenListDtor          (TokenList* token_list);
+
+static bool         IsCurrTokenOp          (TokenList* token_list, OpType target_op);
+
+static int          TokenCtor              (Token* token, const char* val_buff);
+
+static int          Tokenize               (const char* file_buff, TokenList* token_list);
+
+static Node*        ParseExpression        (TokenList* token_list, int* total_nodex);
+
+static Node*        ParseTerm              (TokenList* token_list, int* total_nodex);
+
+static Node*        ParseFactor            (TokenList* token_list, int* total_nodex);
+
+
 int TokenCtor(Token* token, const char* val_buff)
 {
     assert(val_buff);
@@ -105,7 +154,7 @@ int Tokenize(const char* file_buff, TokenList* token_list)
     {
         Token* curr_token = &token_list->data[token_list->size];
 
-        if (isdigit(*file_buff))
+        if (isdigit(*file_buff) || *file_buff == '.')  // cases like 3.1.4 will be processed by in TokenCtor in IsStrDouble
         {
             char num_buff[256] = {};
             int curr_idx = 0;

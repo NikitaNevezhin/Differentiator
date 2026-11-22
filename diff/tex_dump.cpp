@@ -1,5 +1,12 @@
 #include "tex_dump.h"
 
+// --------------------------------
+//        HELPER FUNCTIONS
+// --------------------------------
+
+static int    TexDumpNode         (FILE* tex_file, Node* node);
+
+
 int TexDumpNode(FILE* tex_file, Node* node)
 {
     assert(tex_file);

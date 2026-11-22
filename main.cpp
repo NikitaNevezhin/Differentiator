@@ -1,6 +1,7 @@
 #include "diff/expr_parser.h"
-#include "diff/diff.h"
 #include "diff/tex_dump.h"
+#include "diff/calc.h"
+#include "diff/diff.h"
 
 int main(void)
 {

@@ -11,35 +11,9 @@
 #include "../tree/tree.h"
 
 // -------------------------------------------
-// DSL for convinient work with function Diff
-// -------------------------------------------
-
-#define     _NUM(val)           NewNode(NUM, {val, OP_NONE, -1 }, NULL, NULL)
-#define     _VAR(val)           NewNode(VAR, {NAN, OP_NONE, val}, NULL, NULL)
-
-#define     _ADD(left, right)   NewNode(OP, {NAN, ADD, -1}, left, right)
-#define     _SUB(left, right)   NewNode(OP, {NAN, SUB, -1}, left, right)
-#define     _MUL(left, right)   NewNode(OP, {NAN, MUL, -1}, left, right)
-#define     _DIV(left, right)   NewNode(OP, {NAN, DIV, -1}, left, right)
-
-#define     _DL                 Diff(node->left)
-#define     _DR                 Diff(node->right)
-
-#define     _CL                 CopySubtree(node->left)
-#define     _CR                 CopySubtree(node->right)
-
-// -------------------------------------------
 //          DIFFERENTIATOR SECTION
 // -------------------------------------------
 
 Node*        Diff                (const Node* node);
-
-// -------------------------------------------
-//           CALCULATOR SECTION
-// -------------------------------------------
-
-double       CalcOp              (OpType op_type, double a, double b);
-
-double       CalcTree            (Node* root, const double* var_values);
 
 #endif

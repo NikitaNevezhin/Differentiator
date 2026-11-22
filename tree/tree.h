@@ -132,15 +132,6 @@ void         FprintTree          (FILE* tree_file, Node* root);
 // ------------------
 
 int             FormatNodeVal           (const Node* node, char* val_buff);
-
-int             GenerateNodeDump        (FILE* dot_file, const Node* node, int node_idx, int dump_counter);
-        
-int             GenerateTreeDump        (FILE* dot_file, const Node* root, int* node_idx, int dump_counter);
-        
-int             GenerateDotFile         (Node* root, const char* dot_filename, int dump_counter);
-        
-int             TreeGenerateHtmlFile    (Tree* tree,  const char* html_filename, 
-                                         const char* file, int line, const char* func);
         
 int             TreeGraphDump           (Tree* tree, const char* html_filename, 
                                          const char* file, int line, const char* func);
