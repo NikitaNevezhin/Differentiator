@@ -49,7 +49,7 @@ int FormatNodeVal(const Node* node, char* val_buff)
     return 0;
 }
 
-int GenerateNodeDump(FILE* dot_file, const Node* node, int node_idx, int dump_counter) // rootGenerateDotFile helper func
+static int GenerateNodeDump(FILE* dot_file, const Node* node, int node_idx, int dump_counter) // rootGenerateDotFile helper func
 {
     assert(dot_file);
     assert(node);
@@ -93,7 +93,7 @@ int GenerateNodeDump(FILE* dot_file, const Node* node, int node_idx, int dump_co
     return 0;
 }
 
-int GenerateTreeDump(FILE* dot_file, const Node* root, int* node_idx, int dump_counter)
+static int GenerateTreeDump(FILE* dot_file, const Node* root, int* node_idx, int dump_counter)
 {
     assert(dot_file);
     assert(root);
@@ -137,7 +137,7 @@ int GenerateTreeDump(FILE* dot_file, const Node* root, int* node_idx, int dump_c
     return 0;
 }
 
-int GenerateDotFile(Node* root, const char* dot_filename, int dump_counter)
+static int GenerateDotFile(Node* root, const char* dot_filename, int dump_counter)
 {
     assert(root);
     assert(dot_filename);
@@ -171,7 +171,7 @@ int GenerateDotFile(Node* root, const char* dot_filename, int dump_counter)
     return 0;
 }
 
-int TreeGenerateHtmlFile(Tree* tree, const char* html_filename, 
+static int TreeGenerateHtmlFile(Tree* tree, const char* html_filename, 
                          const char* file, int line, const char* func)
 {
     assert(tree);

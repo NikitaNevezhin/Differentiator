@@ -7,7 +7,7 @@
 static int    TexDumpNode         (FILE* tex_file, Node* node);
 
 
-int TexDumpNode(FILE* tex_file, Node* node)
+static int TexDumpNode(FILE* tex_file, Node* node)
 {
     assert(tex_file);
 
@@ -17,7 +17,7 @@ int TexDumpNode(FILE* tex_file, Node* node)
     {
         case NUM:
         {   
-            if (node->val.num_val < 0) fprintf(tex_file, "(%lg)", node->val);
+            if (node->val.num_val < 0) fprintf(tex_file, "(%lg)", node->val.num_val);
 
             else fprintf(tex_file, "%lg", node->val.num_val);
             
@@ -83,14 +83,16 @@ int TexDumpNode(FILE* tex_file, Node* node)
                     TexDumpNode(tex_file, node->left);
                     fprintf(tex_file, "\\right)");
                     fprintf(tex_file, "^");
-                    fprintf(tex_file, "\\left{");
+                    fprintf(tex_file, "{");
                     TexDumpNode(tex_file, node->right);
-                    fprintf(tex_file, "\\right}");
+                    fprintf(tex_file, "}");
                     break;
                 }
 
                 default: return 1;
             }
+
+            break;
         }
 
         default: return 1;

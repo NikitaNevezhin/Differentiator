@@ -51,7 +51,7 @@ static Node*        ParsePower             (TokenList* token_list, int* total_no
 static Node*        ParseFactor            (TokenList* token_list, int* total_nodes);
 
 
-int TokenCtor(Token* token, const char* val_buff)
+static int TokenCtor(Token* token, const char* val_buff)
 {
     assert(val_buff);
     assert(token);
@@ -103,7 +103,7 @@ int TokenCtor(Token* token, const char* val_buff)
     return 1;  // could not get value
 }
 
-int TokenListCtor(TokenList* token_list, int capacity)
+static int TokenListCtor(TokenList* token_list, int capacity)
 {
     assert(token_list);
 
@@ -123,7 +123,7 @@ int TokenListCtor(TokenList* token_list, int capacity)
     return 0;
 }
 
-int TokenListDtor(TokenList* list)
+static int TokenListDtor(TokenList* list)
 {
     assert(list);
 
@@ -136,7 +136,7 @@ int TokenListDtor(TokenList* list)
     return 0;
 }
 
-bool IsCurrTokenOp(TokenList* token_list, OpType target_op)
+static bool IsCurrTokenOp(TokenList* token_list, OpType target_op)
 {
     assert(token_list);
 
@@ -144,7 +144,7 @@ bool IsCurrTokenOp(TokenList* token_list, OpType target_op)
     return (curr.token_type == TOKEN_OP && curr.token_value.op_type == target_op);
 }
 
-int Tokenize(const char* file_buff, TokenList* token_list)
+static int Tokenize(const char* file_buff, TokenList* token_list)
 {
     assert(file_buff);
     assert(token_list);
@@ -193,7 +193,7 @@ int Tokenize(const char* file_buff, TokenList* token_list)
     return 0;
 }
 
-Node* ParseFactor(TokenList* token_list, int* total_nodes)
+static Node* ParseFactor(TokenList* token_list, int* total_nodes)
 {
     assert(token_list);
     assert(total_nodes);
@@ -242,7 +242,7 @@ Node* ParseFactor(TokenList* token_list, int* total_nodes)
     }
 }
 
-Node* ParsePower(TokenList* token_list, int* total_nodes)
+static Node* ParsePower(TokenList* token_list, int* total_nodes)
 {
     assert(token_list);
     assert(total_nodes);
@@ -265,7 +265,7 @@ Node* ParsePower(TokenList* token_list, int* total_nodes)
     return left;
 }
 
-Node* ParseTerm(TokenList* token_list, int* total_nodes)
+static Node* ParseTerm(TokenList* token_list, int* total_nodes)
 {
     assert(token_list);
     assert(total_nodes);
@@ -288,7 +288,7 @@ Node* ParseTerm(TokenList* token_list, int* total_nodes)
     return left;
 }
 
-Node* ParseExpression(TokenList* token_list, int* total_nodes)
+static Node* ParseExpression(TokenList* token_list, int* total_nodes)
 {
     assert(token_list);
     assert(total_nodes);

@@ -107,7 +107,7 @@ Node* Diff(const Node* node, VarIdx diff_var)
 }
 
 
-int FoldConstTriangle(Node* parent)
+static int FoldConstTriangle(Node* parent)
 {
     assert(parent);
 
@@ -153,7 +153,7 @@ int FoldConstTriangle(Node* parent)
 }
 
 
-Node* FoldConstants(Node* node, bool* is_changed)
+static Node* FoldConstants(Node* node, bool* is_changed)
 {
     if (node == NULL) return NULL;
 
@@ -174,7 +174,7 @@ Node* FoldConstants(Node* node, bool* is_changed)
     return node;
 }
 
-int CollapseToZero(Node* node)
+static int CollapseToZero(Node* node)
 {
     assert(node);
 
@@ -190,7 +190,7 @@ int CollapseToZero(Node* node)
     return 0;
 }
 
-int CollapseNeutralTriangle(Node* parent, Node* alive, Node* dead)
+static int CollapseNeutralTriangle(Node* parent, Node* alive, Node* dead)
 {
     assert(parent);
     assert(alive);
@@ -211,7 +211,7 @@ int CollapseNeutralTriangle(Node* parent, Node* alive, Node* dead)
     return 0;
 }
 
-bool RemoveNeutralTriangle(Node* node)
+static bool RemoveNeutralTriangle(Node* node)
 {
     switch(node->val.op_type)
     {
@@ -300,7 +300,7 @@ bool RemoveNeutralTriangle(Node* node)
     return false;
 }
 
-Node* RemoveNeutralElements(Node* node, bool* is_changed)
+static Node* RemoveNeutralElements(Node* node, bool* is_changed)
 {
     if (node == NULL) return NULL;
     // base case
