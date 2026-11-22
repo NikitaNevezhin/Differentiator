@@ -12,7 +12,7 @@ Node* Diff(const Node* node)
 
         case OP:
         {
-            switch ((OpType)node->val)
+            switch (node->val.op_type)
             {
                 case ADD: return _ADD(_DL, _DR);
 

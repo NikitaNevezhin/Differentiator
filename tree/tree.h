@@ -25,19 +25,6 @@
 
 #define TREE_GRAPH_DUMP(tree, html_filename) TreeGraphDump(tree, html_filename, __FILE__, __LINE__, __func__);
 
-// -------------------------------------------
-// DSL for convinient work with function diff
-// -------------------------------------------
-
-#define _NUM(val)           NewNode(NUM, val, NULL, NULL)
-#define _VAR(val)           NewNode(VAR, val, NULL, NULL)
-
-#define _ADD(left, right)   NewNode(OP, (double)ADD, left, right)
-#define _SUB(left, right)   NewNode(OP, (double)SUB, left, right)
-#define _MUL(left, right)   NewNode(OP, (double)MUL, left, right)
-#define _DIV(left, right)   NewNode(OP, (double)DIV, left, right)
-
-
 // ----------------------------------
 //        GENERAL STRUCTURES
 // ----------------------------------
@@ -54,7 +41,8 @@ enum OpType
     ADD,
     SUB,
     MUL,
-    DIV
+    DIV,
+    OP_NONE
 };
 
 struct NodeVal

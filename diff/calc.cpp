@@ -44,17 +44,17 @@ double CalcTree(Node* root, const double* var_values)
     {
         case NUM:
         {
-            return root->val;
+            return root->val.num_val;
         }
 
         case VAR:
         {
-            return var_values[(int)root->val];
+            return var_values[root->val.var_idx];
         }
 
         case OP:
         {
-            return CalcOp((OpType)root->val, 
+            return CalcOp(root->val.op_type, 
                            CalcTree(root->left, var_values), CalcTree(root->right, var_values));
         }
 

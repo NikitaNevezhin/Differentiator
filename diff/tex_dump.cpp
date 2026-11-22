@@ -10,22 +10,22 @@ int TexDumpNode(FILE* tex_file, Node* node)
     {
         case NUM:
         {   
-            if (node->val < 0) fprintf(tex_file, "(%lg)", node->val);
+            if (node->val.num_val < 0) fprintf(tex_file, "(%lg)", node->val);
 
-            else fprintf(tex_file, "%lg", node->val);
+            else fprintf(tex_file, "%lg", node->val.num_val);
             
             break;
         }
 
         case VAR:
         {
-            fprintf(tex_file, "%c", VARS[(int)node->val]);
+            fprintf(tex_file, "%c", VARS[node->val.var_idx]);
             break;
         }
 
         case OP:
         {
-            switch ((OpType(node->val)))
+            switch (node->val.op_type)
             {
                 case ADD:
                 {

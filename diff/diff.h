@@ -14,25 +14,25 @@
 // DSL for convinient work with function Diff
 // -------------------------------------------
 
-// #define     _NUM(val)           NewNode(NUM, val, NULL, NULL)
-// #define     _VAR(val)           NewNode(VAR, val, NULL, NULL)
+#define     _NUM(val)           NewNode(NUM, {val, OP_NONE, -1 }, NULL, NULL)
+#define     _VAR(val)           NewNode(VAR, {NAN, OP_NONE, val}, NULL, NULL)
 
-// #define     _ADD(left, right)   NewNode(OP, (double)ADD, left, right)
-// #define     _SUB(left, right)   NewNode(OP, (double)SUB, left, right)
-// #define     _MUL(left, right)   NewNode(OP, (double)MUL, left, right)
-// #define     _DIV(left, right)   NewNode(OP, (double)DIV, left, right)
+#define     _ADD(left, right)   NewNode(OP, {NAN, ADD, -1}, left, right)
+#define     _SUB(left, right)   NewNode(OP, {NAN, SUB, -1}, left, right)
+#define     _MUL(left, right)   NewNode(OP, {NAN, MUL, -1}, left, right)
+#define     _DIV(left, right)   NewNode(OP, {NAN, DIV, -1}, left, right)
 
-// #define     _DL                 Diff(node->left)
-// #define     _DR                 Diff(node->right)
+#define     _DL                 Diff(node->left)
+#define     _DR                 Diff(node->right)
 
-// #define     _CL                 CopySubtree(node->left)
-// #define     _CR                 CopySubtree(node->right)
+#define     _CL                 CopySubtree(node->left)
+#define     _CR                 CopySubtree(node->right)
 
-// // -------------------------------------------
-// //          DIFFERENTIATOR SECTION
-// // -------------------------------------------
+// -------------------------------------------
+//          DIFFERENTIATOR SECTION
+// -------------------------------------------
 
-// Node*        Diff                (const Node* node);
+Node*        Diff                (const Node* node);
 
 // -------------------------------------------
 //           CALCULATOR SECTION

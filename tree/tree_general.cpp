@@ -9,7 +9,7 @@ Node* NewNode(NodeType node_type, NodeVal val, Node* left, Node* right)
         return NULL;
     }
 
-    new_node->node_type = node_type; // TODO: zero
+    new_node->node_type = node_type;
     new_node->val = val;
     new_node->left = left;
     new_node->right = right;

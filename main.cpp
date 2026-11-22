@@ -11,17 +11,17 @@ int main(void)
 
     TREE_GRAPH_DUMP(&test_tree, "dump/tree_dump.html");
 
-    // Tree diff_tree = {};
-    // TreeInit(&diff_tree);
+    Tree diff_tree = {};
+    TreeInit(&diff_tree);
 
-    // diff_tree.root = Diff(test_tree.root);
+    diff_tree.root = Diff(test_tree.root);
 
-    // printf("%lg\n", CalcTree(diff_tree.root, var_values));
+    printf("%lg\n", CalcTree(diff_tree.root, var_values));
 
-    // TreeTexDump(&diff_tree, "dump/tex_dump.tex");
+    TreeTexDump(&diff_tree, "dump/tex_dump.tex");
 
-    // TreeDestroy(&test_tree);
-    // TreeDestroy(&diff_tree);
+    TreeDestroy(&test_tree);
+    TreeDestroy(&diff_tree);
 
     return EXIT_SUCCESS;
 }
