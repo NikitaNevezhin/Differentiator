@@ -14,8 +14,9 @@
 //          DIFFERENTIATOR SECTION
 // -------------------------------------------
 
-Node*        Diff                (const Node* node, VarIdx diff_var);
+Node*        Diff                   (const Node* node, VarIdx diff_var);
 
-Node*        FoldConstants       (Node* node, bool* is_changed);
+int          SimplifyTree           (Tree* tree);
+
 
 #endif

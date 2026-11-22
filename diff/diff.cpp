@@ -19,13 +19,29 @@
 #define     _CL                 CopySubtree(node->left)
 #define     _CR                 CopySubtree(node->right)
 
+#define     _LEFT_0             (node->left->node_type == NUM && IsFloatEqual(node->left->val.num_val, 0))
+#define     _LEFT_1             (node->left->node_type == NUM && IsFloatEqual(node->left->val.num_val, 1))
+#define     _RIGHT_0            (node->right->node_type == NUM && IsFloatEqual(node->right->val.num_val, 0))
+#define     _RIGHT_1            (node->right->node_type == NUM && IsFloatEqual(node->right->val.num_val, 1))
+
 // --------------------------------
 //        HELPER FUNCTIONS
 // --------------------------------
 
-static bool ContainsDiffVar     (const Node* node, VarIdx diff_var);
+static bool     ContainsDiffVar             (const Node* node, VarIdx diff_var);
 
-static int  FoldConstTriangle   (Node* parent);
+static int      FoldConstTriangle           (Node* parent);
+
+static Node*    FoldConstants               (Node* node, bool* is_changed);
+
+static int      CollapseNeutralTriangle     (Node* parent, Node* alive, Node* dead);
+
+static bool     RemoveNeutralTriangle       (Node* node);
+
+static int      CollapseToZero              (Node* node);
+
+static Node*    RemoveNeutralElements       (Node* node, bool* is_changed);
+
 
 
 static bool ContainsDiffVar(const Node* node, VarIdx diff_var)
@@ -156,4 +172,165 @@ Node* FoldConstants(Node* node, bool* is_changed)
     }
 
     return node;
+}
+
+int CollapseToZero(Node* node)
+{
+    assert(node);
+
+    NodeDestroy(node->left);
+    NodeDestroy(node->right);
+
+    node->node_type = NUM;
+    node->val.num_val = 0;
+    node->val.op_type = OP_NONE;
+    node->left = NULL;
+    node->right = NULL;
+
+    return 0;
+}
+
+int CollapseNeutralTriangle(Node* parent, Node* alive, Node* dead)
+{
+    assert(parent);
+    assert(alive);
+    assert(dead);
+
+    free(dead);
+
+    parent->node_type = alive->node_type;
+    parent->val = alive->val;
+    parent->left = alive->left;
+    parent->right = alive->right;
+
+    if (parent->left) parent->left->parent = parent;
+    if (parent->right) parent->right->parent = parent;
+
+    free(alive);
+
+    return 0;
+}
+
+bool RemoveNeutralTriangle(Node* node)
+{
+    switch(node->val.op_type)
+    {
+        case ADD:
+        {
+            if (_LEFT_0)
+            {
+                CollapseNeutralTriangle(node, node->right, node->left);
+                return true;
+            }
+
+            else if (_RIGHT_0)
+            {
+                CollapseNeutralTriangle(node, node->left, node->right);
+                return true;
+            }
+
+            break;
+        }
+
+        case SUB:
+        {
+            if (_RIGHT_0)
+            {
+                CollapseNeutralTriangle(node, node->left, node->right);
+                return true;
+            }
+
+            break;
+        }
+
+        case MUL:
+        {
+            if (_LEFT_0 || _RIGHT_0)
+            {
+                CollapseToZero(node);
+                return true;
+            }
+
+            if (_LEFT_1)
+            {
+                CollapseNeutralTriangle(node, node->right, node->left);
+                return true;
+            }
+
+            if (_RIGHT_1)
+            {
+                CollapseNeutralTriangle(node, node->left, node->right);
+                return true;
+            }
+
+            break;
+        }
+
+        case DIV:
+        {
+            if (_LEFT_0 && !(_RIGHT_0))
+            {
+                CollapseToZero(node);
+                return true;
+            }
+
+            if (_RIGHT_1)
+            {
+                CollapseNeutralTriangle(node, node->left, node->right);
+                return true;
+            }
+
+            break;
+        }
+
+        case POW:
+        {
+            if (_RIGHT_1)
+            {
+                CollapseNeutralTriangle(node, node->left, node->right);
+                return true;
+            }
+
+            break;
+        }
+
+        default: break;
+    }
+
+    return false;
+}
+
+Node* RemoveNeutralElements(Node* node, bool* is_changed)
+{
+    if (node == NULL) return NULL;
+    // base case
+    if (node->node_type != OP) return node;
+
+    node->left = RemoveNeutralElements(node->left, is_changed);
+    node->right = RemoveNeutralElements(node->right, is_changed);
+
+    if(RemoveNeutralTriangle(node)) *is_changed = true;
+
+    return node;
+}
+
+int SimplifyTree(Tree* tree)
+{
+    assert(tree);
+    if (tree->root == NULL) return 0;
+
+    bool is_changed = true;
+    while (is_changed)
+    {
+        is_changed = false;
+        tree->root = FoldConstants(tree->root, &is_changed);
+        tree->root = RemoveNeutralElements(tree->root, &is_changed);
+    }
+
+    if (tree->root != NULL)
+    {
+        tree->root->parent = NULL;
+    }
+
+    return 0;
 }
