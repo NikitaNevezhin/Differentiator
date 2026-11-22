@@ -14,6 +14,6 @@
 //          DIFFERENTIATOR SECTION
 // -------------------------------------------
 
-Node*        Diff                (const Node* node);
+Node*        Diff                (const Node* node, VarIdx diff_var);
 
 #endif

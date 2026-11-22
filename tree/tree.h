@@ -45,11 +45,19 @@ enum OpType
     OP_NONE
 };
 
+enum VarIdx
+{
+    VAR_X,
+    VAR_Y,
+    VAR_Z,
+    VAR_NONE = -1
+};
+
 struct NodeVal
 {
     double num_val;
     OpType op_type;
-    int var_idx;
+    VarIdx var_idx;
 };
 
 struct Node
@@ -69,9 +77,17 @@ struct Tree
     int total_nodes;
 };
 
-const char VARS[TOTAL_VARS] =
+struct VarInfo
 {
-    'x', 'y', 'z'
+    VarIdx idx;
+    char symb;
+};
+
+const VarInfo VAR_TABLE[TOTAL_VARS] =
+{
+    {VAR_X, 'x'},
+    {VAR_Y, 'y'},
+    {VAR_Z, 'z'}
 };
 
 // -------------------------------------

@@ -5,7 +5,10 @@
 
 int main(void)
 {
-    double var_values[TOTAL_VARS] = {1, 2, 3};
+    double var_values[TOTAL_VARS] = {};
+    var_values[VAR_X] = 1;
+    var_values[VAR_Y] = 2;
+    var_values[VAR_Z] = 3;
 
     Tree test_tree = {};
     ParseTree(&test_tree, "data/math_expr.txt");
@@ -15,7 +18,7 @@ int main(void)
     Tree diff_tree = {};
     TreeInit(&diff_tree);
 
-    diff_tree.root = Diff(test_tree.root);
+    diff_tree.root = Diff(test_tree.root, VAR_Y);
 
     printf("%lg\n", CalcTree(diff_tree.root, var_values));
 

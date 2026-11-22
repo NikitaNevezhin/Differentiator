@@ -89,10 +89,10 @@ int TokenCtor(Token* token, const char* val_buff)
 
         for (int i = 0; i < TOTAL_VARS; i++)
         {
-            if (VARS[i] == symb)
+            if (VAR_TABLE[i].symb == symb)
             {
                 token->token_type = TOKEN_VAR;
-                token->token_value.var_idx = i;
+                token->token_value.var_idx = VAR_TABLE[i].idx;
                 return 0;
             }
         }

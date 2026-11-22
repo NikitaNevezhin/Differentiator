@@ -4,22 +4,22 @@
 // DSL for convinient work with function Diff
 // -------------------------------------------
 
-#define     _NUM(val)           NewNode(NUM, {val, OP_NONE, -1 }, NULL, NULL)
-#define     _VAR(val)           NewNode(VAR, {NAN, OP_NONE, val}, NULL, NULL)
+#define     _NUM(val)           NewNode(NUM, {val, OP_NONE, VAR_NONE }, NULL, NULL)
+#define     _VAR(val)           NewNode(VAR, {NAN, OP_NONE,      val }, NULL, NULL)
 
-#define     _ADD(left, right)   NewNode(OP, {NAN, ADD, -1}, left, right)
-#define     _SUB(left, right)   NewNode(OP, {NAN, SUB, -1}, left, right)
-#define     _MUL(left, right)   NewNode(OP, {NAN, MUL, -1}, left, right)
-#define     _DIV(left, right)   NewNode(OP, {NAN, DIV, -1}, left, right)
+#define     _ADD(left, right)   NewNode(OP, {NAN, ADD, VAR_NONE}, left, right)
+#define     _SUB(left, right)   NewNode(OP, {NAN, SUB, VAR_NONE}, left, right)
+#define     _MUL(left, right)   NewNode(OP, {NAN, MUL, VAR_NONE}, left, right)
+#define     _DIV(left, right)   NewNode(OP, {NAN, DIV, VAR_NONE}, left, right)
 
-#define     _DL                 Diff(node->left)
-#define     _DR                 Diff(node->right)
+#define     _DL                 Diff(node->left, diff_var)
+#define     _DR                 Diff(node->right, diff_var)
 
 #define     _CL                 CopySubtree(node->left)
 #define     _CR                 CopySubtree(node->right)
 
 
-Node* Diff(const Node* node)
+Node* Diff(const Node* node, VarIdx diff_var)
 {
     if (node == NULL) return NULL;
 
@@ -27,8 +27,11 @@ Node* Diff(const Node* node)
     {
         case NUM: return _NUM(0);
         
-        case VAR: return _NUM(1);
-
+        case VAR: 
+        {   
+            if (node->val.var_idx == diff_var) return _NUM(1);
+            else return _NUM(0);
+        }
         case OP:
         {
             switch (node->val.op_type)

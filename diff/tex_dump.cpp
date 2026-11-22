@@ -26,7 +26,7 @@ int TexDumpNode(FILE* tex_file, Node* node)
 
         case VAR:
         {
-            fprintf(tex_file, "%c", VARS[node->val.var_idx]);
+            fprintf(tex_file, "%c", VAR_TABLE[node->val.var_idx].symb);
             break;
         }
 

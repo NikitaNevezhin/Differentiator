@@ -29,7 +29,7 @@ int FormatNodeVal(const Node* node, char* val_buff)
 
         case VAR:
         {
-            sprintf(val_buff, "%c", VARS[node->val.var_idx]);
+            sprintf(val_buff, "%c", VAR_TABLE[node->val.var_idx]);
             break;
         }
 
