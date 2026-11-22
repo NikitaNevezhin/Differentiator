@@ -16,4 +16,6 @@
 
 Node*        Diff                (const Node* node, VarIdx diff_var);
 
+Node*        FoldConstants       (Node* node, bool* is_changed);
+
 #endif

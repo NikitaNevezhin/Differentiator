@@ -14,16 +14,16 @@ int main(void)
     ParseTree(&test_tree, "data/math_expr.txt");
 
     TREE_GRAPH_DUMP(&test_tree, "dump/tree_dump.html");
-    TreeTexDump(&test_tree, "dump/tex_dump.tex");
 
     Tree diff_tree = {};
     TreeInit(&diff_tree);
 
-    diff_tree.root = Diff(Diff(test_tree.root, VAR_X), VAR_Y);
+    diff_tree.root = Diff(test_tree.root, VAR_X);
+    bool flag = false;
+    FoldConstants(diff_tree.root, &flag);
 
-    printf("%lg\n", CalcTree(test_tree.root, var_values));
-
-    // TreeTexDump(&diff_tree, "dump/tex_dump.tex");
+    TreeTexDump(&diff_tree, "dump/tex_dump.tex");
+    TREE_GRAPH_DUMP(&diff_tree, "dump/tree_dump.html");
 
     TreeDestroy(&test_tree);
     TreeDestroy(&diff_tree);

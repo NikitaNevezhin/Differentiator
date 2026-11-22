@@ -23,7 +23,9 @@
 //        HELPER FUNCTIONS
 // --------------------------------
 
-static bool ContainsDiffVar(const Node* node, VarIdx diff_var);
+static bool ContainsDiffVar     (const Node* node, VarIdx diff_var);
+
+static int  FoldConstTriangle   (Node* parent);
 
 
 static bool ContainsDiffVar(const Node* node, VarIdx diff_var)
@@ -86,4 +88,72 @@ Node* Diff(const Node* node, VarIdx diff_var)
     }
 
     return NULL;
+}
+
+
+int FoldConstTriangle(Node* parent)
+{
+    assert(parent);
+
+    OpType op = parent->val.op_type;
+
+    double a = parent->left->val.num_val;
+    double b = parent->right->val.num_val;
+
+    if (op == DIV && IsFloatEqual(b, 0.0))
+    {
+        PRINT_RED("Zero division error in %s\n", __func__);
+        return 1;
+    }
+
+    free(parent->left);
+    free(parent->right);
+
+    parent->left = NULL;
+    parent->right = NULL;
+    parent->node_type = NUM;
+
+    switch(op)
+    {
+        case ADD: parent->val.num_val = a + b;
+                  break;
+        
+        case SUB: parent->val.num_val = a - b;
+                  break;
+
+        case MUL: parent->val.num_val = a * b;
+                  break;
+
+        case DIV: parent->val.num_val = a / b;
+                  break;
+
+        case POW: parent->val.num_val = pow(a, b);
+                  break;
+
+        default: return 1;
+    }
+
+    return 0;
+}
+
+
+Node* FoldConstants(Node* node, bool* is_changed)
+{
+    if (node == NULL) return NULL;
+
+    // base case
+    if (node->node_type != OP) return node;
+
+    // recursive case
+    if (node->left->node_type == OP)  FoldConstants(node->left, is_changed);
+    if (node->right->node_type == OP) FoldConstants(node->right, is_changed);
+
+    if (node->left->node_type == NUM && node->right->node_type == NUM)
+    {
+        FoldConstTriangle(node);
+        *is_changed = true;
+        return node;
+    }
+
+    return node;
 }
