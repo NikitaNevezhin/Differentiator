@@ -57,10 +57,17 @@ enum OpType
     DIV
 };
 
+struct NodeVal
+{
+    double num_val;
+    OpType op_type;
+    int var_idx;
+};
+
 struct Node
 {
     NodeType node_type;
-    double val;
+    NodeVal val;
 
     Node* left;
     Node* right;
@@ -116,21 +123,21 @@ const OpInfo OP_TABLE[TOTAL_OPS] =
 //   GENERAL TOOLS
 // -----------------
 
-Node*        NewNode             (NodeType node_type, double val, Node* left, Node* right);
+Node*        NewNode             (NodeType node_type, NodeVal val, Node* left, Node* right);
  
 int          NodeDestroy         (Node* node);
 
 int          TreeInit            (Tree* tree);
 
 int          TreeDestroy         (Tree* tree);
- 
-int          LinkLeft            (Node* parent, Node* child);
-
-int          LinkRight           (Node* parent, Node* child);
 
 bool         IsLeaf              (Node* node);
 
 Node*        CopySubtree         (Node* root);
+
+void         PrintTree           (Node* root);
+    
+void         FprintTree          (FILE* tree_file, Node* root);
 
 // ------------------
 // GRAPH DUMP SECTION

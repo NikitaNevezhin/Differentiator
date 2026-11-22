@@ -17,5 +17,7 @@ bool    IsSpace             (const char symb);
 
 int     SkipSpaces          (FILE* file);
 
+int     StripSpaces         (char* buff);
+
 
 #endif

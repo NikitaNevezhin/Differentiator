@@ -1,6 +1,6 @@
 #include "tree.h"
 
-Node* NewNode(NodeType node_type, double val, Node* left, Node* right)
+Node* NewNode(NodeType node_type, NodeVal val, Node* left, Node* right)
 {
     Node* new_node = (Node*)calloc(1, sizeof(Node));
     if (new_node == NULL)
@@ -9,7 +9,7 @@ Node* NewNode(NodeType node_type, double val, Node* left, Node* right)
         return NULL;
     }
 
-    new_node->node_type = node_type;
+    new_node->node_type = node_type; // TODO: zero
     new_node->val = val;
     new_node->left = left;
     new_node->right = right;
@@ -26,12 +26,6 @@ int NodeDestroy(Node* node)
 
     NodeDestroy(node->left);
     NodeDestroy(node->right);
-
-    node->val = POIZON;
-
-    node->parent = NULL;
-    node->left = NULL;
-    node->right = NULL;
 
     free(node);
 
@@ -59,24 +53,6 @@ int TreeDestroy(Tree* tree)
     return 0;
 }
 
-int LinkLeft(Node* parent, Node* child)
-{
-    assert(parent);
-
-    parent->left = child;
-
-    return 0;
-}
-
-int LinkRight(Node* parent, Node* child)
-{
-    assert(parent);
-
-    parent->right = child;
-
-    return 0;
-}
-
 bool IsLeaf(Node* node)
 {
     assert(node);
@@ -92,4 +68,46 @@ Node* CopySubtree(Node* node)
     Node* right_subtree = CopySubtree(node->right);
 
     return NewNode(node->node_type, node->val, left_subtree, right_subtree);
+}
+
+void PrintTree(Node* root)
+{
+    assert(root);
+
+    char val_buff[VAL_MAX_SIZE] = {};
+    FormatNodeVal(root, val_buff);
+
+    printf("(");
+    printf("%s", val_buff);
+
+    if (root->left) PrintTree(root->left);
+    else            printf("()");
+
+    if (root->right) PrintTree(root->right);
+    else            printf("()");
+
+    printf(")");
+}
+
+void FprintTree(FILE* tree_file, Node* root)
+{
+    assert(tree_file);
+
+    char val_buff[VAL_MAX_SIZE] = {};
+    FormatNodeVal(root, val_buff);
+
+    fprintf(tree_file, "(");
+    if (root->node_type == OP)
+        fprintf(tree_file, "%c", OP_TABLE[root->val.op_type].symbol);
+    
+    else
+        fprintf(tree_file, "%s", val_buff);
+
+    if (root->left) FprintTree(tree_file, root->left);
+    // else            fprintf(tree_file, "()");
+
+    if (root->right) FprintTree(tree_file, root->right);
+    // else             fprintf(tree_file, "()");
+
+    fprintf(tree_file, ")");
 }

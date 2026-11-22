@@ -46,3 +46,26 @@ int SkipSpaces(FILE* file)
     
     return 0;
 }
+
+int StripSpaces(char* buff)
+{
+    assert(buff);
+
+    char* write_ptr = buff;
+    char* read_ptr = buff;
+
+    while (*read_ptr != '\0')
+    {
+        if (!isspace(*read_ptr))
+        {
+            *write_ptr = *read_ptr;
+            write_ptr++;
+        }
+
+        read_ptr++;
+    }
+
+    *write_ptr = '\0';
+
+    return 0;
+}

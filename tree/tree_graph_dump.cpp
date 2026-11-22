@@ -9,22 +9,22 @@ int FormatNodeVal(const Node* node, char* val_buff)
     {
         case NUM:
         {
-            sprintf(val_buff, "%lg", node->val);
+            sprintf(val_buff, "%lg", node->val.num_val);
             break;
         }
 
         case VAR:
         {
-            sprintf(val_buff, "%c", VARS[(int)node->val]);
+            sprintf(val_buff, "%c", VARS[node->val.var_idx]);
             break;
         }
 
         case OP:
         {
-            int op_idx = (int)node->val;
-            if (op_idx < 0 || op_idx >= TOTAL_OPS) sprintf(val_buff, "%s", "UNKNOWN");
+            OpType op_type = node->val.op_type;
+            if (op_type < 0 || op_type >= TOTAL_OPS) sprintf(val_buff, "%s", "UNKNOWN");
 
-            else sprintf(val_buff, "%s", OP_TABLE[op_idx].op_name);
+            else sprintf(val_buff, "%s", OP_TABLE[op_type].op_name);
 
             break;
         }
