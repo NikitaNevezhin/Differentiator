@@ -13,6 +13,8 @@
 #define     _DIV(left, right)   NewNode(OP,  {NAN, DIV, VAR_NONE},  left, right)
 #define     _POW(left, right)   NewNode(OP,  {NAN, POW, VAR_NONE},  left, right)
 
+//hahah 
+
 #define     _DL                 Diff(node->left, diff_var)
 #define     _DR                 Diff(node->right, diff_var)
 
