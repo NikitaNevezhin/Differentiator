@@ -98,7 +98,7 @@ void FprintTree(FILE* tree_file, Node* root)
 
     fprintf(tree_file, "(");
     if (root->node_type == OP)
-        fprintf(tree_file, "%c", OP_TABLE[root->val.op_type].symbol);
+        fprintf(tree_file, "%s", OP_TABLE[root->val.op_type].designation);
     
     else
         fprintf(tree_file, "%s", val_buff);

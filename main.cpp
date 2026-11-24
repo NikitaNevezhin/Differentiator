@@ -17,17 +17,17 @@ int main(void)
     TREE_GRAPH_DUMP(&test_tree, "dump/tree_dump.html");
     PRINT_GREEN("Test tree created successfully.\n");
 
-    Tree diff_tree = {};
-    TreeInit(&diff_tree);
+    // Tree diff_tree = {};
+    // TreeInit(&diff_tree);
 
-    diff_tree.root = Diff(test_tree.root, VAR_X);
-    PRINT_GREEN("Tree differentiated successfully!\n");
-    SimplifyTree(&diff_tree);
+    // diff_tree.root = Diff(test_tree.root, VAR_X);
+    // PRINT_GREEN("Tree differentiated successfully!\n");
+    // SimplifyTree(&diff_tree);
 
-    TreeTexDump(&diff_tree, "dump/tex_dump.tex");
+    // TreeTexDump(&diff_tree, "dump/tex_dump.tex");
 
     TreeDestroy(&test_tree);
-    TreeDestroy(&diff_tree);
+    // TreeDestroy(&diff_tree);
 
     return EXIT_SUCCESS;
 }

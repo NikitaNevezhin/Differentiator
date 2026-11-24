@@ -65,17 +65,15 @@ static int TokenCtor(Token* token, const char* val_buff)
         return 0;
     }
 
-    if (strlen(val_buff) == 1)  // operator or variable
+    if (strlen(val_buff) > 0)  // operator or variable
     {
-        char symb = val_buff[0];
-
-        if (symb == '(') 
+        if (strcmp(val_buff, "(") == 0) 
         {
             token->token_type = TOKEN_LPAREN;
             return 0;
         }
 
-        if (symb == ')')
+        if (strcmp(val_buff, ")") == 0)
         {
             token->token_type = TOKEN_RPAREN;
             return 0;
@@ -83,7 +81,7 @@ static int TokenCtor(Token* token, const char* val_buff)
 
         for (int i = 0; i < TOTAL_OPS; i++)
         {
-            if (OP_TABLE[i].symbol == symb)
+            if (strcmp(val_buff, OP_TABLE[i].designation) == 0)
             {
                 token->token_type = TOKEN_OP;
                 token->token_value.op_type = OP_TABLE[i].op;
@@ -93,7 +91,7 @@ static int TokenCtor(Token* token, const char* val_buff)
 
         for (int i = 0; i < TOTAL_VARS; i++)
         {
-            if (VAR_TABLE[i].symb == symb)
+            if (strcmp(val_buff, VAR_TABLE[i].name) == 0)
             {
                 token->token_type = TOKEN_VAR;
                 token->token_value.var_idx = VAR_TABLE[i].idx;
@@ -176,6 +174,28 @@ static int Tokenize(const char* file_buff, TokenList* token_list)
             continue;
         }
 
+        else if (isalpha(*file_buff))
+        {
+            char word_buff[256] = {};
+            int curr_idx = 0;
+            while (isalpha(*file_buff))
+            {
+                word_buff[curr_idx] = *file_buff;
+                curr_idx++;
+                file_buff++;
+            }
+
+            word_buff[curr_idx] = '\0';
+
+            if (TokenCtor(curr_token, word_buff) != 0)
+            {
+                PRINT_RED("Unknown word '%s' in %s\n", word_buff, __func__);
+                return 1;
+            }
+
+            token_list->size++;
+        }
+
         else
         {
             char val_buff[] = {*file_buff, '\0'};
@@ -234,6 +254,43 @@ static Node* ParseFactor(TokenList* token_list, int* total_nodes)
 
             token_list->pos++;
             return node;
+        }
+
+        case TOKEN_OP:
+        {
+            switch (curr_token.token_value.op_type)
+            {
+                case SIN:
+                {
+                    token_list->pos++;
+                    if (token_list->data[token_list->pos].token_type != TOKEN_LPAREN)
+                    {
+                        PRINT_RED("Syntax error in %s: expected '(' after sin\n", __func__);
+                        return NULL;
+                    }
+
+                    token_list->pos++;
+                    PRINT_YELLOW("Before parsing expression\n");
+                    printf("%d %d\n", token_list->data[token_list->pos].token_type);
+                    Node* sin_arg = ParseExpression(token_list, total_nodes);
+
+                    if (sin_arg == NULL) return NULL;
+
+                    if (token_list->data[token_list->pos].token_type != TOKEN_RPAREN)
+                    {
+                        PRINT_RED("Syntax error in %s: expected ')' on pos %d\n", __func__, token_list->pos);
+                        return NULL;
+                    }
+
+                    token_list->pos++;
+
+                    return NewNode(OP, {NAN, SIN, VAR_NONE}, sin_arg, NULL);
+                }
+
+                default: break;
+            }
+
+            return NULL;
         }
 
         default:
@@ -353,6 +410,11 @@ int ParseTree(Tree* tree, const char* tree_filename)
     TokenListCtor(&token_list, size + 1);
 
     Tokenize(file_buff, &token_list);
+
+    for (int i = 0; i < size; i++)
+    {
+        printf("%d %d\n", token_list.data[i].token_type, token_list.data[i].token_value.op_type);
+    }
 
     free(file_buff);
 

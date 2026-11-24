@@ -20,7 +20,7 @@
 #define VAL_MAX_SIZE 256       // still no idea what to choose
 
 #define TOTAL_NODE_TYPES 3
-#define TOTAL_OPS 5
+#define TOTAL_OPS 6
 #define TOTAL_VARS 3
 
 #define TREE_GRAPH_DUMP(tree, html_filename) TreeGraphDump(tree, html_filename, __FILE__, __LINE__, __func__);
@@ -43,6 +43,7 @@ enum OpType
     MUL,
     DIV,
     POW,
+    SIN,
     OP_NONE
 };
 
@@ -81,14 +82,14 @@ struct Tree
 struct VarInfo
 {
     VarIdx idx;
-    char symb;
+    const char* name;
 };
 
 const VarInfo VAR_TABLE[TOTAL_VARS] =
 {
-    {VAR_X, 'x'},
-    {VAR_Y, 'y'},
-    {VAR_Z, 'z'}
+    {VAR_X, "x"},
+    {VAR_Y, "y"},
+    {VAR_Z, "z"}
 };
 
 // -------------------------------------
@@ -112,17 +113,18 @@ const NodeTypeInfo NODE_TYPE_TABLE[TOTAL_NODE_TYPES] =
 struct OpInfo
 {
     OpType op;
-    char symbol;
+    const char* designation;
     const char* op_name;
 };
 
 const OpInfo OP_TABLE[TOTAL_OPS] =
 {
-    {ADD, '+', "ADD"},              // USER!!!!!!!!!!!
-    {SUB, '-', "SUB"},              // DONT CHANGE THE ORDER!!!!!
-    {MUL, '*', "MUL"},              // GET THE FUCK OUT!!!!!!!!!!
-    {DIV, '/', "DIV"},               // please
-    {POW, '^', "POW"}
+    {ADD,   "+", "ADD"},              // USER!!!!!!!!!!!
+    {SUB,   "-", "SUB"},              // DONT CHANGE THE ORDER!!!!!
+    {MUL,   "*", "MUL"},              // GET THE FUCK OUT!!!!!!!!!!
+    {DIV,   "/", "DIV"},              // please
+    {POW,   "^", "POW"},
+    {SIN, "sin", "SIN"}
 };
 
 // -----------------
