@@ -12,6 +12,8 @@ int main(void)
 
     Tree test_tree = {};
     ParseTree(&test_tree, "data/math_expr.txt");
+    TREE_GRAPH_DUMP(&test_tree, "dump/tree_dump.html");
+
 
     Tree diff_tree = {};
     TreeInit(&diff_tree);
@@ -19,7 +21,6 @@ int main(void)
     diff_tree.root = Diff(test_tree.root, VAR_X);
     SimplifyTree(&diff_tree);
 
-    TREE_GRAPH_DUMP(&diff_tree, "dump/tree_dump.html");
     TreeTexDump(&diff_tree, "dump/tex_dump.tex");
 
     TreeDestroy(&test_tree);

@@ -34,11 +34,11 @@ static int      FoldConstTriangle           (Node* parent);
 
 static Node*    FoldConstants               (Node* node, bool* is_changed);
 
-static int      CollapseNeutralTriangle     (Node* parent, Node* alive, Node* dead);
+static int      ReplaceWithChild            (Node* parent, Node* alive, Node* dead);
 
-static bool     RemoveNeutralTriangle       (Node* node);
+static bool     CollapseNeutralTriangle       (Node* node);
 
-static int      CollapseToZero              (Node* node);
+static int      CollapseTriangleToZero      (Node* node);
 
 static Node*    RemoveNeutralElements       (Node* node, bool* is_changed);
 
@@ -174,7 +174,7 @@ static Node* FoldConstants(Node* node, bool* is_changed)
     return node;
 }
 
-static int CollapseToZero(Node* node)
+static int CollapseTriangleToZero(Node* node)
 {
     assert(node);
 
@@ -190,7 +190,7 @@ static int CollapseToZero(Node* node)
     return 0;
 }
 
-static int CollapseNeutralTriangle(Node* parent, Node* alive, Node* dead)
+static int ReplaceWithChild(Node* parent, Node* alive, Node* dead)
 {
     assert(parent);
     assert(alive);
@@ -211,7 +211,7 @@ static int CollapseNeutralTriangle(Node* parent, Node* alive, Node* dead)
     return 0;
 }
 
-static bool RemoveNeutralTriangle(Node* node)
+static bool CollapseNeutralTriangle(Node* node)
 {
     switch(node->val.op_type)
     {
@@ -219,13 +219,13 @@ static bool RemoveNeutralTriangle(Node* node)
         {
             if (_LEFT_0)
             {
-                CollapseNeutralTriangle(node, node->right, node->left);
+                ReplaceWithChild(node, node->right, node->left);
                 return true;
             }
 
             else if (_RIGHT_0)
             {
-                CollapseNeutralTriangle(node, node->left, node->right);
+                ReplaceWithChild(node, node->left, node->right);
                 return true;
             }
 
@@ -236,7 +236,7 @@ static bool RemoveNeutralTriangle(Node* node)
         {
             if (_RIGHT_0)
             {
-                CollapseNeutralTriangle(node, node->left, node->right);
+                ReplaceWithChild(node, node->left, node->right);
                 return true;
             }
 
@@ -247,19 +247,19 @@ static bool RemoveNeutralTriangle(Node* node)
         {
             if (_LEFT_0 || _RIGHT_0)
             {
-                CollapseToZero(node);
+                CollapseTriangleToZero(node);
                 return true;
             }
 
             if (_LEFT_1)
             {
-                CollapseNeutralTriangle(node, node->right, node->left);
+                ReplaceWithChild(node, node->right, node->left);
                 return true;
             }
 
             if (_RIGHT_1)
             {
-                CollapseNeutralTriangle(node, node->left, node->right);
+                ReplaceWithChild(node, node->left, node->right);
                 return true;
             }
 
@@ -270,13 +270,13 @@ static bool RemoveNeutralTriangle(Node* node)
         {
             if (_LEFT_0 && !(_RIGHT_0))
             {
-                CollapseToZero(node);
+                CollapseTriangleToZero(node);
                 return true;
             }
 
             if (_RIGHT_1)
             {
-                CollapseNeutralTriangle(node, node->left, node->right);
+                ReplaceWithChild(node, node->left, node->right);
                 return true;
             }
 
@@ -287,7 +287,7 @@ static bool RemoveNeutralTriangle(Node* node)
         {
             if (_RIGHT_1)
             {
-                CollapseNeutralTriangle(node, node->left, node->right);
+                ReplaceWithChild(node, node->left, node->right);
                 return true;
             }
 
@@ -309,7 +309,7 @@ static Node* RemoveNeutralElements(Node* node, bool* is_changed)
     node->left = RemoveNeutralElements(node->left, is_changed);
     node->right = RemoveNeutralElements(node->right, is_changed);
 
-    if(RemoveNeutralTriangle(node)) *is_changed = true;
+    if(CollapseNeutralTriangle(node)) *is_changed = true;
 
     return node;
 }
