@@ -5,6 +5,7 @@
 
 int main(void)
 {
+    PRINT_GREEN("Starting in main\n");
     double var_values[TOTAL_VARS] = {};
     var_values[VAR_X] = 2;
     var_values[VAR_Y] = 3;
@@ -12,13 +13,15 @@ int main(void)
 
     Tree test_tree = {};
     ParseTree(&test_tree, "data/math_expr.txt");
+    PRINT_GREEN("Test Tree parsed successfully.\n");
     TREE_GRAPH_DUMP(&test_tree, "dump/tree_dump.html");
-
+    PRINT_GREEN("Test tree created successfully.\n");
 
     Tree diff_tree = {};
     TreeInit(&diff_tree);
 
     diff_tree.root = Diff(test_tree.root, VAR_X);
+    PRINT_GREEN("Tree differentiated successfully!\n");
     SimplifyTree(&diff_tree);
 
     TreeTexDump(&diff_tree, "dump/tex_dump.tex");

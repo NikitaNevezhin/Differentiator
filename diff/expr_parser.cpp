@@ -46,6 +46,8 @@ static Node*        ParseExpression        (TokenList* token_list, int* total_no
 
 static Node*        ParseTerm              (TokenList* token_list, int* total_nodes);
 
+static Node*        ParseUnary             (TokenList* token_list, int* total_nodes);
+
 static Node*        ParsePower             (TokenList* token_list, int* total_nodes);
 
 static Node*        ParseFactor            (TokenList* token_list, int* total_nodes);
@@ -265,12 +267,27 @@ static Node* ParsePower(TokenList* token_list, int* total_nodes)
     return left;
 }
 
+static Node* ParseUnary(TokenList* token_list, int* total_nodes)
+{
+    assert(token_list);
+    assert(total_nodes);
+
+    if (token_list->data[token_list->pos].token_type == TOKEN_OP &&
+        token_list->data[token_list->pos].token_value.op_type == SUB)
+    {
+        token_list->pos++;
+        return NewNode(OP,  {NAN, SUB, VAR_NONE},  NewNode(NUM, {0, OP_NONE, VAR_NONE}, NULL, NULL), ParsePower(token_list, total_nodes));
+    }
+
+    return ParsePower(token_list, total_nodes);
+}
+
 static Node* ParseTerm(TokenList* token_list, int* total_nodes)
 {
     assert(token_list);
     assert(total_nodes);
 
-    Node* left = ParsePower(token_list, total_nodes);
+    Node* left = ParseUnary(token_list, total_nodes);
     if (left == NULL) return NULL;
 
     while (IsCurrTokenOp(token_list, DIV) || IsCurrTokenOp(token_list, MUL))
@@ -278,7 +295,7 @@ static Node* ParseTerm(TokenList* token_list, int* total_nodes)
         NodeVal op_val = token_list->data[token_list->pos].token_value;
         token_list->pos++;
 
-        Node* right = ParsePower(token_list, total_nodes);
+        Node* right = ParseUnary(token_list, total_nodes);
         if (right == NULL) return NULL;
 
         (*total_nodes)++;
@@ -313,8 +330,10 @@ static Node* ParseExpression(TokenList* token_list, int* total_nodes)
 
 int ParseTree(Tree* tree, const char* tree_filename)
 {
+    if (tree == NULL) PRINT_RED("tree is NULL!\n");
     assert(tree);
     assert(tree_filename);
+    PRINT_GREEN("I did pass asserts!\n");
 
     int size = GetFileSize(tree_filename);
 
@@ -325,6 +344,7 @@ int ParseTree(Tree* tree, const char* tree_filename)
         PRINT_RED("callocation failure in %s\n", __func__);
         return 1;
     }
+    PRINT_GREEN("file_buff filled successfully\n");
 
     ReadFromFile(tree_filename, file_buff, size);
     StripSpaces(file_buff);

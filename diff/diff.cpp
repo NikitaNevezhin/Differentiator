@@ -15,8 +15,6 @@
 #define     _DIV(left, right)   NewNode(OP,  {NAN, DIV, VAR_NONE},  left, right)
 #define     _POW(left, right)   NewNode(OP,  {NAN, POW, VAR_NONE},  left, right)
 
-//hahah 
-
 #define     _DL                 Diff(node->left, diff_var)
 #define     _DR                 Diff(node->right, diff_var)
 
@@ -165,11 +163,13 @@ static Node* FoldConstants(Node* node, bool* is_changed)
     if (node->node_type != OP) return node;
 
     // recursive case
+    PRINT_GREEN("Got to recursive case at least once\n");
     if (node->left->node_type == OP)  FoldConstants(node->left, is_changed);
     if (node->right->node_type == OP) FoldConstants(node->right, is_changed);
 
     if (node->left->node_type == NUM && node->right->node_type == NUM)
     {
+        PRINT_GREEN("I got it to FoldConstTriangle\n");
         FoldConstTriangle(node);
         *is_changed = true;
         return node;
@@ -320,15 +320,21 @@ static Node* RemoveNeutralElements(Node* node, bool* is_changed)
 
 int SimplifyTree(Tree* tree)
 {
+    PRINT_GREEN("Starting in %s\n", __func__);
     assert(tree);
     if (tree->root == NULL) return 0;
 
+    PRINT_GREEN("Successful execution before while in %s\n", __func__);
     bool is_changed = true;
     while (is_changed)
     {
         is_changed = false;
+        PRINT_GREEN("Before executing FoldConstants\n");
         tree->root = FoldConstants(tree->root, &is_changed);
+        PRINT_GREEN("FoldConstants executed successfully\n");
         tree->root = RemoveNeutralElements(tree->root, &is_changed);
+        PRINT_GREEN("RemoveNeutralElements executed successfully\n");
+
     }
 
     if (tree->root != NULL)
