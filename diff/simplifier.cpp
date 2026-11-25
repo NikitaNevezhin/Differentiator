@@ -1,6 +1,7 @@
 #include "simplifier.h"
 #include "dsl.h"
 #include "../utils/FloatTools.h"
+#include "../common/op_table.h"
 
 static int      FoldConstTriangle           (Node* parent);
 
@@ -68,14 +69,16 @@ static Node* FoldConstants(Node* node, bool* is_changed)
     // base case
     if (node->node_type != OP) return node;
 
+    int args = OP_TABLE[node->val.op_type].arg_amount;
+
+    if (args == 1) return node;
+
     // recursive case
-    PRINT_GREEN("Got to recursive case at least once\n");
     if (node->left->node_type == OP)  FoldConstants(node->left, is_changed);
     if (node->right->node_type == OP) FoldConstants(node->right, is_changed);
 
     if (node->left->node_type == NUM && node->right->node_type == NUM)
     {
-        PRINT_GREEN("I got it to FoldConstTriangle\n");
         FoldConstTriangle(node);
         *is_changed = true;
         return node;
@@ -217,7 +220,7 @@ static Node* RemoveNeutralElements(Node* node, bool* is_changed)
     if (node->node_type != OP) return node;
 
     node->left = RemoveNeutralElements(node->left, is_changed);
-    node->right = RemoveNeutralElements(node->right, is_changed);
+    if (node->right) node->right = RemoveNeutralElements(node->right, is_changed);
 
     if(CollapseNeutralTriangle(node)) *is_changed = true;
 

@@ -1,6 +1,8 @@
 #include "expr_parser.h"
 #include "lexer.h"
 
+#include "../common/op_table.h"
+
 // --------------------------------
 //        HELPER FUNCTIONS
 // --------------------------------
@@ -59,38 +61,34 @@ static Node* ParseFactor(TokenList* token_list, int* total_nodes)
 
         case TOKEN_OP:
         {
-            switch (curr_token.token_value.op_type)
+            OpType curr_op = curr_token.token_value.op_type;
+            
+            if (OP_TABLE[curr_op].arg_amount == 1)
             {
-                case SIN:
+                token_list->pos++;
+                if (token_list->data[token_list->pos].token_type != TOKEN_LPAREN)
                 {
-                    token_list->pos++;
-                    if (token_list->data[token_list->pos].token_type != TOKEN_LPAREN)
-                    {
-                        PRINT_RED("Syntax error in %s: expected '(' after sin\n", __func__);
-                        return NULL;
-                    }
-
-                    token_list->pos++;
-                    PRINT_YELLOW("Before parsing expression\n");
-                    printf("%d %d\n", token_list->data[token_list->pos].token_type);
-                    Node* sin_arg = ParseExpression(token_list, total_nodes);
-
-                    if (sin_arg == NULL) return NULL;
-
-                    if (token_list->data[token_list->pos].token_type != TOKEN_RPAREN)
-                    {
-                        PRINT_RED("Syntax error in %s: expected ')' on pos %d\n", __func__, token_list->pos);
-                        return NULL;
-                    }
-
-                    token_list->pos++;
-
-                    return NewNode(OP, {NAN, SIN, VAR_NONE}, sin_arg, NULL);
+                    PRINT_RED("Syntax error in %s: expected '(' after sin\n", __func__);
+                    return NULL;
                 }
 
-                default: break;
+                token_list->pos++;
+                Node* sin_arg = ParseExpression(token_list, total_nodes);
+
+                if (sin_arg == NULL) return NULL;
+
+                if (token_list->data[token_list->pos].token_type != TOKEN_RPAREN)
+                {
+                    PRINT_RED("Syntax error in %s: expected ')' on pos %d\n", __func__, token_list->pos);
+                    return NULL;
+                }
+
+                token_list->pos++;
+                (*total_nodes)++;
+                return NewNode(OP, {NAN, SIN, VAR_NONE}, sin_arg, NULL);
             }
 
+            PRINT_RED("Got binary operation in ParseFactor - some syntax error\n");
             return NULL;
         }
 

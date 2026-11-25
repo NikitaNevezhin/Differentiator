@@ -110,22 +110,6 @@ const NodeTypeInfo NODE_TYPE_TABLE[TOTAL_NODE_TYPES] =
     {  OP,  "OP", "#FFF3E0" }                           // GET THE FUCK OUT!!!!!!!!!
 };
 
-struct OpInfo
-{
-    OpType op;
-    const char* designation;
-    const char* op_name;
-};
-
-const OpInfo OP_TABLE[TOTAL_OPS] =
-{
-    {ADD,   "+", "ADD"},              // USER!!!!!!!!!!!
-    {SUB,   "-", "SUB"},              // DONT CHANGE THE ORDER!!!!!
-    {MUL,   "*", "MUL"},              // GET THE FUCK OUT!!!!!!!!!!
-    {DIV,   "/", "DIV"},              // please
-    {POW,   "^", "POW"},
-    {SIN, "sin", "SIN"}
-};
 
 // -----------------
 //   GENERAL TOOLS

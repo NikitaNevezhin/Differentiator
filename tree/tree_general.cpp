@@ -1,5 +1,7 @@
 #include "tree.h"
 
+#include "../common/op_table.h"
+
 Node* NewNode(NodeType node_type, NodeVal val, Node* left, Node* right)
 {
     Node* new_node = (Node*)calloc(1, sizeof(Node));

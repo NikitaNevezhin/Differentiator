@@ -1,5 +1,7 @@
 #include "tree.h"
 
+#include "../common/op_table.h"
+
 // --------------------------------
 //        HELPER FUNCTIONS
 // --------------------------------

@@ -1,5 +1,6 @@
 #include "lexer.h"
 
+#include "../common/op_table.h"
 #include "../utils/FileTools.h"
 
 static int          Tokenize               (const char* file_buff, TokenList* token_list);
