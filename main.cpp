@@ -2,6 +2,7 @@
 #include "diff/tex_dump.h"
 #include "diff/calc.h"
 #include "diff/diff.h"
+#include "diff/simplifier.h"
 
 int main(void)
 {
@@ -16,15 +17,16 @@ int main(void)
     PRINT_GREEN("Test Tree parsed successfully.\n");
     TREE_GRAPH_DUMP(&test_tree, "dump/tree_dump.html");
     PRINT_GREEN("Test tree created successfully.\n");
+    TreeTexDump(&test_tree, "dump/tex_dump.tex");
 
-    // Tree diff_tree = {};
-    // TreeInit(&diff_tree);
+    Tree diff_tree = {};
+    TreeInit(&diff_tree);
 
-    // diff_tree.root = Diff(test_tree.root, VAR_X);
-    // PRINT_GREEN("Tree differentiated successfully!\n");
-    // SimplifyTree(&diff_tree);
+    diff_tree.root = Diff(test_tree.root, VAR_X);
+    PRINT_GREEN("Tree differentiated successfully!\n");
+    SimplifyTree(&diff_tree);
 
-    // TreeTexDump(&diff_tree, "dump/tex_dump.tex");
+    TreeTexDump(&diff_tree, "dump/tex_dump.tex");
 
     TreeDestroy(&test_tree);
     // TreeDestroy(&diff_tree);

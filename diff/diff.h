@@ -6,7 +6,6 @@
 #include <string.h>
 #include <math.h>
 #include "../utils/FloatTools.h"
-#include "../utils/FileTools.h"
 
 #include "../tree/tree.h"
 
@@ -15,8 +14,5 @@
 // -------------------------------------------
 
 Node*        Diff                   (const Node* node, VarIdx diff_var);
-
-int          SimplifyTree           (Tree* tree);
-
 
 #endif
