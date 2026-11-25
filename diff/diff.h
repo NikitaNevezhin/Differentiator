@@ -13,6 +13,8 @@
 //          DIFFERENTIATOR SECTION
 // -------------------------------------------
 
+bool         ContainsDiffVar        (const Node* node, VarIdx diff_var);
+
 Node*        Diff                   (const Node* node, VarIdx diff_var);
 
 #endif
