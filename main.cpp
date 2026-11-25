@@ -26,6 +26,8 @@ int main(void)
     PRINT_GREEN("Tree differentiated successfully!\n");
     SimplifyTree(&diff_tree);
 
+    printf("%lg\n", CalcTree(diff_tree.root, var_values));
+
     TreeTexDump(&diff_tree, "dump/tex_dump.tex");
 
     TreeDestroy(&test_tree);

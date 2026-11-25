@@ -1,47 +1,17 @@
 #include "calc.h"
 
+#include "../common/op_table.h"
+
 // --------------------------------
 //        HELPER FUNCTIONS
 // --------------------------------
 
 static double       CalcOp              (OpType op_type, double a, double b);
 
+
 static double CalcOp(OpType op_type, double a, double b)
 {
-
-    double res = NAN;
-
-    switch (op_type)
-    {
-        case ADD: res = a + b;
-                  break;
-
-        case SUB: res = a - b;
-                  break;
-
-        case MUL: res = a * b;
-                  break;
-
-        case DIV:
-        {
-            if (IsFloatEqual(b, 0)) 
-            {
-                res = NAN;
-                PRINT_RED("ZERO DIVISION ERROR\n");
-            }
-
-            else res = a / b;
-            
-            break;
-        }
-
-        case POW: res = pow(a, b);
-                  break;
-
-        default: res = NAN;
-    }
-
-    return res;
+    return OP_TABLE[op_type].calc_func(a, b);
 }
 
 double CalcTree(Node* root, const double* var_values)
@@ -66,7 +36,7 @@ double CalcTree(Node* root, const double* var_values)
                            CalcTree(root->left, var_values), CalcTree(root->right, var_values));
         }
 
-        default: return NAN;
+        default: break;
     }
 
     return NAN;
