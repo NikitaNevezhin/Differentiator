@@ -8,7 +8,7 @@ int main(void)
 {
     // PRINT_GREEN("Starting in main\n");
     double var_values[TOTAL_VARS] = {};
-    var_values[VAR_X] = 3.1415926535 * 2;
+    var_values[VAR_X] = 3.1415926535 / 2;
     var_values[VAR_Y] = 3;
     var_values[VAR_Z] = 5;
 

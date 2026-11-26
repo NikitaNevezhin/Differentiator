@@ -30,6 +30,10 @@ static double   CalcCos   (double a, double b);
 
 static double   CalcTan   (double a, double b);
 
+static double   CalcCot   (double a, double b);
+
+static double   CalcLn    (double a, double b);
+
 // -----------------------------
 //        DIFF FUNCTIONS
 // -----------------------------
@@ -50,6 +54,10 @@ static Node*    DiffCos    (const Node* node, VarIdx diff_var);
 
 static Node*    DiffTan    (const Node* node, VarIdx diff_var);
 
+static Node*    DiffCot    (const Node* node, VarIdx diff_var);
+
+static Node*    DiffLn     (const Node* node, VarIdx diff_var);
+
 // -----------------------------
 //      TEX_DUMP FUNCTIONS
 // -----------------------------
@@ -69,6 +77,10 @@ static int   TexDumpSin     (FILE* tex_file, Node* node);
 static int   TexDumpCos     (FILE* tex_file, Node* node);
 
 static int   TexDumpTan     (FILE* tex_file, Node* node);
+
+static int   TexDumpCot     (FILE* tex_file, Node* node);
+
+static int   TexDumpLn      (FILE* tex_file, Node* node);
 
 
 static double CalcAdd(double a, double b)
@@ -118,6 +130,18 @@ static double CalcTan(double a, double b)
 {
     (void)b; // escaping unused variable error
     return tan(a);
+}
+
+static double CalcCot(double a, double b)
+{
+    (void)b;
+    return 1 / tan(a);
+}
+
+static double CalcLn(double a, double b)
+{
+    (void)b;
+    return log(a);
 }
 
 
@@ -181,6 +205,19 @@ static Node* DiffTan(const Node* node, VarIdx diff_var)
     assert(node);
     return _MUL(_DL, _DIV(_NUM(1), _POW(_COS(_CL), _NUM(2)))); // (tan(f))' = 1/(cos(f)^2) * f'
 }
+
+static Node* DiffCot(const Node* node, VarIdx diff_var)
+{
+    assert(node);
+    return _NEG(_MUL(_DL, _DIV(_NUM(1), _POW(_SIN(_CL), _NUM(2))))); // (cot(f))' = -1 / (sin(f)^2) * f'
+}
+
+static Node* DiffLn(const Node* node, VarIdx diff_var)
+{
+    assert(node);
+    return _MUL(_DL, _DIV(_NUM(1), _CL)); // (ln(f))' = (1 / f) * f'
+}
+
 
 static int TexDumpAdd(FILE* tex_file, Node* node)
 {
@@ -296,6 +333,32 @@ static int TexDumpTan(FILE* tex_file, Node* node)
     return 0;
 }
 
+static int TexDumpCot(FILE* tex_file, Node* node)
+{
+    assert(node);
+    assert(tex_file);
+
+    fprintf(tex_file, "\\cot");
+    fprintf(tex_file, "(");
+    TexDumpNode(tex_file, node->left);
+    fprintf(tex_file, ")");
+
+    return 0;
+}
+
+static int TexDumpLn(FILE* tex_file, Node* node)
+{
+    assert(tex_file);
+    assert(node);
+
+    fprintf(tex_file, "\\ln");
+    fprintf(tex_file, "(");
+    TexDumpNode(tex_file, node->left);
+    fprintf(tex_file, ")");
+
+    return 0;
+}
+
 const OpInfo OP_TABLE[TOTAL_OPS] =
 {
     {ADD,   "+", "ADD", 2,      CalcAdd, DiffAdd, TexDumpAdd},              // USER!!!!!!!!!!!
@@ -305,5 +368,7 @@ const OpInfo OP_TABLE[TOTAL_OPS] =
     {POW,   "^", "POW", 2,      CalcPow, DiffPow, TexDumpPow},
     {SIN, "sin", "SIN", 1,      CalcSin, DiffSin, TexDumpSin},
     {COS, "cos", "COS", 1,      CalcCos, DiffCos, TexDumpCos},
-    {TAN, "tan", "TAN", 1,      CalcTan, DiffTan, TexDumpTan}
+    {TAN, "tan", "TAN", 1,      CalcTan, DiffTan, TexDumpTan},
+    {COT, "cot", "COT", 1,      CalcCot, DiffCot, TexDumpCot},
+    {LN,   "ln",  "LN", 1,      CalcLn,   DiffLn,  TexDumpLn}
 };
