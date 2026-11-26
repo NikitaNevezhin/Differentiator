@@ -56,7 +56,7 @@ enum VarIdx
     VAR_NONE = -1
 };
 
-struct NodeVal
+union NodeVal
 {
     double num_val;
     OpType op_type;

@@ -2,6 +2,7 @@
 #include "lexer.h"
 
 #include "../common/op_table.h"
+#include "dsl.h"
 
 // --------------------------------
 //        HELPER FUNCTIONS
@@ -85,7 +86,7 @@ static Node* ParseFactor(TokenList* token_list, int* total_nodes)
 
                 token_list->pos++;
                 (*total_nodes)++;
-                return NewNode(OP, {NAN, curr_op, VAR_NONE}, single_arg, NULL);
+                return NewNode(OP, (NodeVal){.op_type = curr_op}, single_arg, NULL);
             }
 
             PRINT_RED("Got binary operation in ParseFactor - some syntax error\n");
@@ -132,7 +133,7 @@ static Node* ParseUnary(TokenList* token_list, int* total_nodes)
         token_list->data[token_list->pos].token_value.op_type == SUB)
     {
         token_list->pos++;
-        return NewNode(OP,  {NAN, SUB, VAR_NONE},  NewNode(NUM, {0, OP_NONE, VAR_NONE}, NULL, NULL), ParsePower(token_list, total_nodes));
+        return _NEG(ParsePower(token_list, total_nodes));
     }
 
     return ParsePower(token_list, total_nodes);

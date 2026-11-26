@@ -9,17 +9,17 @@
 // DSL for convinient work with function Diff
 // -------------------------------------------
 
-#define     _NUM(val)           NewNode(NUM, {val, OP_NONE, VAR_NONE }, NULL, NULL)
-#define     _VAR(val)           NewNode(VAR, {NAN, OP_NONE,      val }, NULL, NULL)
+#define     _NUM(val)           NewNode(NUM, (NodeVal){.num_val = val}, NULL, NULL)
+#define     _VAR(val)           NewNode(VAR, (NodeVal){.var_idx = val}, NULL, NULL)
 
-#define     _ADD(left, right)   NewNode(OP,  {NAN, ADD, VAR_NONE},  left, right)
-#define     _SUB(left, right)   NewNode(OP,  {NAN, SUB, VAR_NONE},  left, right)
-#define     _MUL(left, right)   NewNode(OP,  {NAN, MUL, VAR_NONE},  left, right)
-#define     _DIV(left, right)   NewNode(OP,  {NAN, DIV, VAR_NONE},  left, right)
-#define     _POW(left, right)   NewNode(OP,  {NAN, POW, VAR_NONE},  left, right)
+#define     _ADD(left, right)   NewNode(OP,  (NodeVal){.op_type = ADD},  left, right)
+#define     _SUB(left, right)   NewNode(OP,  (NodeVal){.op_type = SUB},  left, right)
+#define     _MUL(left, right)   NewNode(OP,  (NodeVal){.op_type = MUL},  left, right)
+#define     _DIV(left, right)   NewNode(OP,  (NodeVal){.op_type = DIV},  left, right)
+#define     _POW(left, right)   NewNode(OP,  (NodeVal){.op_type = POW},  left, right)
 
-#define     _SIN(left)          NewNode(OP, {NAN, SIN, VAR_NONE},  left, NULL)
-#define     _COS(left)          NewNode(OP, {NAN, COS, VAR_NONE},  left, NULL)
+#define     _SIN(left)          NewNode(OP, (NodeVal){.op_type = SIN},  left, NULL)
+#define     _COS(left)          NewNode(OP, (NodeVal){.op_type = COS},  left, NULL)
 
 #define     _DL                 Diff(node->left, diff_var)
 #define     _DR                 Diff(node->right, diff_var)
