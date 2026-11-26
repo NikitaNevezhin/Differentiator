@@ -1,4 +1,9 @@
 #include "tree.h"
+#include <stdlib.h>
+#include <assert.h>
+
+#include "../utils/PrintColor.h"
+#include "../utils/StringTools.h"
 
 #include "../common/op_table.h"
 

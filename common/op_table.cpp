@@ -1,6 +1,9 @@
 #include "op_table.h"
 
+#include <assert.h>
+
 #include "../utils/FloatTools.h"
+#include "../utils/PrintColor.h"
 
 #include "../diff/diff.h"
 #include "../diff/dsl.h"
@@ -25,6 +28,8 @@ static double   CalcSin   (double a, double b);
 
 static double   CalcCos   (double a, double b);
 
+static double   CalcTan   (double a, double b);
+
 // -----------------------------
 //        DIFF FUNCTIONS
 // -----------------------------
@@ -43,6 +48,8 @@ static Node*    DiffSin    (const Node* node, VarIdx diff_var);
 
 static Node*    DiffCos    (const Node* node, VarIdx diff_var);
 
+static Node*    DiffTan    (const Node* node, VarIdx diff_var);
+
 // -----------------------------
 //      TEX_DUMP FUNCTIONS
 // -----------------------------
@@ -60,6 +67,8 @@ static int   TexDumpPow     (FILE* tex_file, Node* node);
 static int   TexDumpSin     (FILE* tex_file, Node* node);
 
 static int   TexDumpCos     (FILE* tex_file, Node* node);
+
+static int   TexDumpTan     (FILE* tex_file, Node* node);
 
 
 static double CalcAdd(double a, double b)
@@ -103,6 +112,12 @@ static double CalcCos(double a, double b)
 {
     (void)b; // escaping unused variable error
     return cos(a);
+}
+
+static double CalcTan(double a, double b)
+{
+    (void)b; // escaping unused variable error
+    return tan(a);
 }
 
 
@@ -160,6 +175,12 @@ static Node* DiffCos(const Node* node, VarIdx diff_var)
     return _NEG(_MUL(_SIN(_CL), _DL));  // (cos(f))' = -sin(f) * f'
 }
 
+
+static Node* DiffTan(const Node* node, VarIdx diff_var)
+{
+    assert(node);
+    return _MUL(_DL, _DIV(_NUM(1), _POW(_COS(_CL), _NUM(2)))); // (tan(f))' = 1/(cos(f)^2) * f'
+}
 
 static int TexDumpAdd(FILE* tex_file, Node* node)
 {
@@ -241,7 +262,7 @@ static int TexDumpSin(FILE* tex_file, Node* node)
     assert(node);
     assert(tex_file);
 
-    fprintf(tex_file, "sin");
+    fprintf(tex_file, "\\sin");
     fprintf(tex_file, "(");
     TexDumpNode(tex_file, node->left);
     fprintf(tex_file, ")");
@@ -254,7 +275,20 @@ static int TexDumpCos(FILE* tex_file, Node* node)
     assert(node);
     assert(tex_file);
 
-    fprintf(tex_file, "cos");
+    fprintf(tex_file, "\\cos");
+    fprintf(tex_file, "(");
+    TexDumpNode(tex_file, node->left);
+    fprintf(tex_file, ")");
+
+    return 0;
+}
+
+static int TexDumpTan(FILE* tex_file, Node* node)
+{
+    assert(node);
+    assert(tex_file);
+
+    fprintf(tex_file, "\\tan");
     fprintf(tex_file, "(");
     TexDumpNode(tex_file, node->left);
     fprintf(tex_file, ")");
@@ -270,5 +304,6 @@ const OpInfo OP_TABLE[TOTAL_OPS] =
     {DIV,   "/", "DIV", 2,      CalcDiv, DiffDiv, TexDumpDiv},              // please
     {POW,   "^", "POW", 2,      CalcPow, DiffPow, TexDumpPow},
     {SIN, "sin", "SIN", 1,      CalcSin, DiffSin, TexDumpSin},
-    {COS, "cos", "COS", 1,      CalcCos, DiffCos, TexDumpCos}
+    {COS, "cos", "COS", 1,      CalcCos, DiffCos, TexDumpCos},
+    {TAN, "tan", "TAN", 1,      CalcTan, DiffTan, TexDumpTan}
 };
