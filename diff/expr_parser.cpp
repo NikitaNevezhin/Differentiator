@@ -73,9 +73,9 @@ static Node* ParseFactor(TokenList* token_list, int* total_nodes)
                 }
 
                 token_list->pos++;
-                Node* sin_arg = ParseExpression(token_list, total_nodes);
+                Node* single_arg = ParseExpression(token_list, total_nodes);
 
-                if (sin_arg == NULL) return NULL;
+                if (single_arg == NULL) return NULL;
 
                 if (token_list->data[token_list->pos].token_type != TOKEN_RPAREN)
                 {
@@ -85,7 +85,7 @@ static Node* ParseFactor(TokenList* token_list, int* total_nodes)
 
                 token_list->pos++;
                 (*total_nodes)++;
-                return NewNode(OP, {NAN, SIN, VAR_NONE}, sin_arg, NULL);
+                return NewNode(OP, {NAN, curr_op, VAR_NONE}, single_arg, NULL);
             }
 
             PRINT_RED("Got binary operation in ParseFactor - some syntax error\n");

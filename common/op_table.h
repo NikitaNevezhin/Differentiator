@@ -8,6 +8,8 @@ typedef double (*CalcFunc)(double, double);
 
 typedef Node*  (*DiffFunc)(const Node*, VarIdx);
 
+typedef int    (*TexDumpFunc)(FILE*, Node*);
+
 struct OpInfo
 {
     OpType op;
@@ -15,8 +17,9 @@ struct OpInfo
     const char* op_name;
     int arg_amount;
 
-    CalcFunc calc_func;
-    DiffFunc diff_func;
+    CalcFunc    calc_func;
+    DiffFunc    diff_func;
+    TexDumpFunc tex_dump_func;
 };
 
 extern const OpInfo OP_TABLE[TOTAL_OPS];

@@ -1,13 +1,7 @@
 #include "tex_dump.h"
+#include "../common/op_table.h"
 
-// --------------------------------
-//        HELPER FUNCTIONS
-// --------------------------------
-
-static int    TexDumpNode         (FILE* tex_file, Node* node);
-
-
-static int TexDumpNode(FILE* tex_file, Node* node)
+int TexDumpNode(FILE* tex_file, Node* node)
 {
     assert(tex_file);
 
@@ -32,66 +26,10 @@ static int TexDumpNode(FILE* tex_file, Node* node)
 
         case OP:
         {
-            switch (node->val.op_type)
-            {
-                case ADD:
-                {
-                    fprintf(tex_file, "\\left(");
-                    TexDumpNode(tex_file, node->left);
-                    fprintf(tex_file, " + ");
-                    TexDumpNode(tex_file, node->right);
-                    fprintf(tex_file, "\\right)");
-                    break;
-                }
+            OpType curr_op = node->val.op_type;
 
-                case SUB:
-                {
-                    fprintf(tex_file, "\\left(");
-                    TexDumpNode(tex_file, node->left);
-                    fprintf(tex_file, " - ");
-                    TexDumpNode(tex_file, node->right);
-                    fprintf(tex_file, "\\right)");
-                    break;
-                }
-
-                case MUL:
-                {
-                    fprintf(tex_file, "\\left(");
-                    TexDumpNode(tex_file, node->left);
-                    fprintf(tex_file, " \\cdot ");
-                    TexDumpNode(tex_file, node->right);
-                    fprintf(tex_file, "\\right)");
-                    break;
-                }
-
-                case DIV:
-                {
-                    fprintf(tex_file, "\\left(");
-                    fprintf(tex_file, "\\frac{");
-                    TexDumpNode(tex_file, node->left);
-                    fprintf(tex_file, "}");
-                    fprintf(tex_file, "{");
-                    TexDumpNode(tex_file, node->right);
-                    fprintf(tex_file, "}");
-                    fprintf(tex_file, "\\right)");
-                    break;
-                }
-
-                case POW:
-                {
-                    fprintf(tex_file, "\\left(");
-                    TexDumpNode(tex_file, node->left);
-                    fprintf(tex_file, "\\right)");
-                    fprintf(tex_file, "^");
-                    fprintf(tex_file, "{");
-                    TexDumpNode(tex_file, node->right);
-                    fprintf(tex_file, "}");
-                    break;
-                }
-
-                default: return 1;
-            }
-
+            OP_TABLE[curr_op].tex_dump_func(tex_file, node);
+            
             break;
         }
 

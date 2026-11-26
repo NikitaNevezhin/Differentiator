@@ -5,6 +5,8 @@
 #include "../diff/diff.h"
 #include "../diff/dsl.h"
 
+#include "../diff/tex_dump.h"
+
 // -----------------------------
 //        CALC FUNCTIONS
 // -----------------------------
@@ -27,19 +29,37 @@ static double   CalcCos   (double a, double b);
 //        DIFF FUNCTIONS
 // -----------------------------
 
-static Node* DiffAdd    (const Node* node, VarIdx diff_var);
+static Node*    DiffAdd    (const Node* node, VarIdx diff_var);
 
-static Node* DiffSub    (const Node* node, VarIdx diff_var);
+static Node*    DiffSub    (const Node* node, VarIdx diff_var);
 
-static Node* DiffMul    (const Node* node, VarIdx diff_var);
+static Node*    DiffMul    (const Node* node, VarIdx diff_var);
 
-static Node* DiffDiv    (const Node* node, VarIdx diff_var);
+static Node*    DiffDiv    (const Node* node, VarIdx diff_var);
 
-static Node* DiffPow    (const Node* node, VarIdx diff_var);
+static Node*    DiffPow    (const Node* node, VarIdx diff_var);
 
-static Node* DiffSin    (const Node* node, VarIdx diff_var);
+static Node*    DiffSin    (const Node* node, VarIdx diff_var);
 
-static Node* DiffCos    (const Node* node, VarIdx diff_var);
+static Node*    DiffCos    (const Node* node, VarIdx diff_var);
+
+// -----------------------------
+//      TEX_DUMP FUNCTIONS
+// -----------------------------
+
+static int   TexDumpAdd     (FILE* tex_file, Node* node);
+
+static int   TexDumpSub     (FILE* tex_file, Node* node);
+
+static int   TexDumpMul     (FILE* tex_file, Node* node);
+
+static int   TexDumpDiv     (FILE* tex_file, Node* node);
+
+static int   TexDumpPow     (FILE* tex_file, Node* node);
+
+static int   TexDumpSin     (FILE* tex_file, Node* node);
+
+static int   TexDumpCos     (FILE* tex_file, Node* node);
 
 
 static double CalcAdd(double a, double b)
@@ -82,32 +102,37 @@ static double CalcSin(double a, double b)
 static double CalcCos(double a, double b)
 {
     (void)b; // escaping unused variable error
-    return sin(a);
+    return cos(a);
 }
 
 
 static Node* DiffAdd(const Node* node, VarIdx diff_var)
 {
+    assert(node);
     return _ADD(_DL, _DR);
 }
 
 static Node* DiffSub(const Node* node, VarIdx diff_var)
 {
+    assert(node);
     return _SUB(_DL, _DR);
 }
 
 static Node* DiffMul(const Node* node, VarIdx diff_var)
 {
+    assert(node);
     return _ADD(_MUL(_DL, _CR), _MUL(_CL, _DR));
 }
 
 static Node* DiffDiv(const Node* node, VarIdx diff_var)
 {
+    assert(node);
     return _DIV(_SUB(_MUL(_DL, _CR), _MUL(_CL, _DR)), _MUL(_CR, _CR));
 }
 
 static Node* DiffPow(const Node* node, VarIdx diff_var)
 {
+    assert(node);
     if (ContainsDiffVar(node->right, diff_var))
     {
         PRINT_RED("Exponent functions diff is still in process!\n");
@@ -123,13 +148,127 @@ static Node* DiffPow(const Node* node, VarIdx diff_var)
     return _NUM(0); // const ^ const
 }
 
+static Node* DiffSin(const Node* node, VarIdx diff_var)
+{
+    assert(node);
+    return _MUL(_COS(_CL), _DL);  // (sin(f))' = cos(f) * f'
+}
+
+static Node* DiffCos(const Node* node, VarIdx diff_var)
+{
+    assert(node);
+    return _NEG(_MUL(_SIN(_CL), _DL));  // (cos(f))' = -sin(f) * f'
+}
+
+
+static int TexDumpAdd(FILE* tex_file, Node* node)
+{
+    assert(node);
+    assert(tex_file);
+
+    fprintf(tex_file, "\\left(");
+    TexDumpNode(tex_file, node->left);
+    fprintf(tex_file, " + ");
+    TexDumpNode(tex_file, node->right);
+    fprintf(tex_file, "\\right)");
+
+    return 0;
+}
+
+static int TexDumpSub(FILE* tex_file, Node* node)
+{
+    assert(node);
+    assert(tex_file);
+
+    fprintf(tex_file, "\\left(");
+    if (!_LEFT_0) TexDumpNode(tex_file, node->left);
+    fprintf(tex_file, " - ");
+    TexDumpNode(tex_file, node->right);
+    fprintf(tex_file, "\\right)");
+
+    return 0;
+}
+
+static int TexDumpMul(FILE* tex_file, Node* node)
+{
+    assert(node);
+    assert(tex_file);
+
+    fprintf(tex_file, "\\left(");
+    TexDumpNode(tex_file, node->left);
+    fprintf(tex_file, " \\cdot ");
+    TexDumpNode(tex_file, node->right);
+    fprintf(tex_file, "\\right)");
+
+    return 0;
+}
+
+static int TexDumpDiv(FILE* tex_file, Node* node)
+{
+    assert(node);
+    assert(tex_file);
+
+    fprintf(tex_file, "\\left(");
+    fprintf(tex_file, "\\frac{");
+    TexDumpNode(tex_file, node->left);
+    fprintf(tex_file, "}");
+    fprintf(tex_file, "{");
+    TexDumpNode(tex_file, node->right);
+    fprintf(tex_file, "}");
+    fprintf(tex_file, "\\right)");
+
+    return 0;
+}
+
+static int TexDumpPow(FILE* tex_file, Node* node)
+{
+    assert(node);
+    assert(tex_file);
+
+    fprintf(tex_file, "\\left(");
+    TexDumpNode(tex_file, node->left);
+    fprintf(tex_file, "\\right)");
+    fprintf(tex_file, "^");
+    fprintf(tex_file, "{");
+    TexDumpNode(tex_file, node->right);
+    fprintf(tex_file, "}");
+
+    return 0;
+}
+
+static int TexDumpSin(FILE* tex_file, Node* node)
+{
+    assert(node);
+    assert(tex_file);
+
+    fprintf(tex_file, "sin");
+    fprintf(tex_file, "(");
+    TexDumpNode(tex_file, node->left);
+    fprintf(tex_file, ")");
+
+    return 0;
+}
+
+static int TexDumpCos(FILE* tex_file, Node* node)
+{
+    assert(node);
+    assert(tex_file);
+
+    fprintf(tex_file, "cos");
+    fprintf(tex_file, "(");
+    TexDumpNode(tex_file, node->left);
+    fprintf(tex_file, ")");
+
+    return 0;
+}
+
 const OpInfo OP_TABLE[TOTAL_OPS] =
 {
-    {ADD,   "+", "ADD", 2, CalcAdd, DiffAdd},              // USER!!!!!!!!!!!
-    {SUB,   "-", "SUB", 2, CalcSub, DiffSub},              // DONT CHANGE THE ORDER!!!!!
-    {MUL,   "*", "MUL", 2, CalcMul, DiffMul},              // GET THE FUCK OUT!!!!!!!!!!
-    {DIV,   "/", "DIV", 2, CalcDiv, DiffDiv},              // please
-    {POW,   "^", "POW", 2, CalcPow, DiffPow},
-    {SIN, "sin", "SIN", 1, CalcSin, NULL},
-    {COS, "cos", "COS", 1, CalcCos, NULL}
+    {ADD,   "+", "ADD", 2,      CalcAdd, DiffAdd, TexDumpAdd},              // USER!!!!!!!!!!!
+    {SUB,   "-", "SUB", 2,      CalcSub, DiffSub, TexDumpSub},              // DONT CHANGE THE ORDER!!!!!
+    {MUL,   "*", "MUL", 2,      CalcMul, DiffMul, TexDumpMul},              // GET THE FUCK OUT!!!!!!!!!!
+    {DIV,   "/", "DIV", 2,      CalcDiv, DiffDiv, TexDumpDiv},              // please
+    {POW,   "^", "POW", 2,      CalcPow, DiffPow, TexDumpPow},
+    {SIN, "sin", "SIN", 1,      CalcSin, DiffSin, TexDumpSin},
+    {COS, "cos", "COS", 1,      CalcCos, DiffCos, TexDumpCos}
 };

@@ -18,6 +18,9 @@
 #define     _DIV(left, right)   NewNode(OP,  {NAN, DIV, VAR_NONE},  left, right)
 #define     _POW(left, right)   NewNode(OP,  {NAN, POW, VAR_NONE},  left, right)
 
+#define     _SIN(left)          NewNode(OP, {NAN, SIN, VAR_NONE},  left, NULL)
+#define     _COS(left)          NewNode(OP, {NAN, COS, VAR_NONE},  left, NULL)
+
 #define     _DL                 Diff(node->left, diff_var)
 #define     _DR                 Diff(node->right, diff_var)
 
@@ -28,5 +31,7 @@
 #define     _LEFT_1             (node->left->node_type == NUM && IsFloatEqual(node->left->val.num_val, 1))
 #define     _RIGHT_0            (node->right->node_type == NUM && IsFloatEqual(node->right->val.num_val, 0))
 #define     _RIGHT_1            (node->right->node_type == NUM && IsFloatEqual(node->right->val.num_val, 1))
+
+#define     _NEG(left)          _SUB(_NUM(0), CopySubtree(left))
 
 #endif
