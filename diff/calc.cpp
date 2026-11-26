@@ -32,8 +32,19 @@ double CalcTree(Node* root, const double* var_values)
 
         case OP:
         {
-            return CalcOp(root->val.op_type, 
+            int args = OP_TABLE[root->val.op_type].arg_amount;
+
+            if (args == 2)
+            {
+                return CalcOp(root->val.op_type, 
                            CalcTree(root->left, var_values), CalcTree(root->right, var_values));
+            }
+
+            else  // sin, cos, tg... do not have second arg -> replace it with NAN
+            {
+                return CalcOp(root->val.op_type, 
+                            CalcTree(root->left, var_values), NAN);  
+            }
         }
 
         default: break;

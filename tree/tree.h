@@ -20,7 +20,7 @@
 #define VAL_MAX_SIZE 256       // still no idea what to choose
 
 #define TOTAL_NODE_TYPES 3
-#define TOTAL_OPS 6
+#define TOTAL_OPS 7
 #define TOTAL_VARS 3
 
 #define TREE_GRAPH_DUMP(tree, html_filename) TreeGraphDump(tree, html_filename, __FILE__, __LINE__, __func__);
@@ -44,6 +44,7 @@ enum OpType
     DIV,
     POW,
     SIN,
+    COS,
     OP_NONE
 };
 

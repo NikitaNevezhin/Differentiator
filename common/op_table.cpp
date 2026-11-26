@@ -21,6 +21,8 @@ static double   CalcPow   (double a, double b);
 
 static double   CalcSin   (double a, double b);
 
+static double   CalcCos   (double a, double b);
+
 // -----------------------------
 //        DIFF FUNCTIONS
 // -----------------------------
@@ -36,6 +38,8 @@ static Node* DiffDiv    (const Node* node, VarIdx diff_var);
 static Node* DiffPow    (const Node* node, VarIdx diff_var);
 
 static Node* DiffSin    (const Node* node, VarIdx diff_var);
+
+static Node* DiffCos    (const Node* node, VarIdx diff_var);
 
 
 static double CalcAdd(double a, double b)
@@ -72,6 +76,12 @@ static double CalcPow(double a, double b)
 static double CalcSin(double a, double b)
 {
     (void)b; // escaping unused variable error   
+    return sin(a);
+}
+
+static double CalcCos(double a, double b)
+{
+    (void)b; // escaping unused variable error
     return sin(a);
 }
 
@@ -120,5 +130,6 @@ const OpInfo OP_TABLE[TOTAL_OPS] =
     {MUL,   "*", "MUL", 2, CalcMul, DiffMul},              // GET THE FUCK OUT!!!!!!!!!!
     {DIV,   "/", "DIV", 2, CalcDiv, DiffDiv},              // please
     {POW,   "^", "POW", 2, CalcPow, DiffPow},
-    {SIN, "sin", "SIN", 1, CalcSin, NULL}
+    {SIN, "sin", "SIN", 1, CalcSin, NULL},
+    {COS, "cos", "COS", 1, CalcCos, NULL}
 };
