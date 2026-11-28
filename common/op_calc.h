@@ -30,4 +30,6 @@ double      CalcArcsin     (double a, double b);
 
 double      CalcArccos     (double a, double b);
 
+double      CalcArctan     (double a, double b);
+
 #endif

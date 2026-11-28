@@ -88,3 +88,10 @@ double CalcArccos(double a, double b)
 
     return acos(a);
 }
+
+double CalcArctan(double a, double b)
+{
+    (void)b;
+
+    return atan(a);
+}

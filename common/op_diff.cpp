@@ -87,3 +87,9 @@ Node* DiffArccos(const Node* node, VarIdx diff_var)
     assert(node);
     return _NEG(DiffArcsin(node, diff_var)); // (arccos(f))' = -(arcsin(f))'
 }
+
+Node* DiffArctan(const Node* node, VarIdx diff_var)
+{
+    assert(node);
+    return _MUL(_DL, _DIV(_NUM(1), _ADD(_NUM(1), _POW(_CL, _NUM(2))))); // (arctan(f))' = 1 / (1 + f^2) * f'
+}

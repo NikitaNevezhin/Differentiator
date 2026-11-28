@@ -190,3 +190,16 @@ int TexDumpArccos(FILE* tex_file, Node* node)
 
     return 0;
 }
+
+int TexDumpArctan(FILE* tex_file, Node* node)
+{
+    assert(tex_file);
+    assert(node);
+
+    fprintf(tex_file, "\\arctan");
+    fprintf(tex_file, "(");
+    TexDumpNode(tex_file, node->left);
+    fprintf(tex_file, ")");
+
+    return 0;
+}

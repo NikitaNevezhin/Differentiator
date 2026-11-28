@@ -1,1 +1,1 @@
-arccos(x) + arcsin(x)
+arctan(5) * x

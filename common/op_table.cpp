@@ -35,5 +35,6 @@ const OpInfo OP_TABLE[TOTAL_OPS] =
     {COT,       "cot",    "COT", 1,         CalcCot,    DiffCot,    TexDumpCot},
     {LN,         "ln",     "LN", 1,          CalcLn,     DiffLn,     TexDumpLn},
     {ARCSIN, "arcsin", "ARCSIN", 1,      CalcArcsin, DiffArcsin, TexDumpArcsin},
-    {ARCCOS, "arccos", "ARCCOS", 1,      CalcArccos, DiffArccos, TexDumpArccos}
+    {ARCCOS, "arccos", "ARCCOS", 1,      CalcArccos, DiffArccos, TexDumpArccos},
+    {ARCTAN, "arctan", "ARCTAN", 1,      CalcArctan, DiffArctan, TexDumpArctan}
 };
