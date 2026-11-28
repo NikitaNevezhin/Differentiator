@@ -1,5 +1,6 @@
 #include "op_tex.h"
 
+#include "../utils/FloatTools.h"
 #include "../diff/dsl.h"
 #include "../diff/tex_dump.h"
 
@@ -62,10 +63,31 @@ int TexDumpDiv(FILE* tex_file, Node* node)
     return 0;
 }
 
+int TexDumpNroot(FILE* tex_file, Node* node) // is called inside TexDumpPow
+{
+    assert(tex_file);
+    assert(node);
+    
+    int root_power = 1 / node->right->val.num_val;
+
+    fprintf(tex_file, "\\sqrt[%d]", root_power);
+    fprintf(tex_file, "{");
+    TexDumpNode(tex_file, node->left);
+    fprintf(tex_file, "}");
+
+    return 0;
+}
+
 int TexDumpPow(FILE* tex_file, Node* node)
 {
     assert(node);
     assert(tex_file);
+
+    if (node->right->node_type == NUM && IsNatural(1 / node->right->val.num_val))
+    {
+        TexDumpNroot(tex_file, node);
+        return 0;
+    }
 
     fprintf(tex_file, "\\left(");
     TexDumpNode(tex_file, node->left);
@@ -136,6 +158,19 @@ int TexDumpLn(FILE* tex_file, Node* node)
     assert(node);
 
     fprintf(tex_file, "\\ln");
+    fprintf(tex_file, "(");
+    TexDumpNode(tex_file, node->left);
+    fprintf(tex_file, ")");
+
+    return 0;
+}
+
+int TexDumpArcsin(FILE* tex_file, Node* node)
+{
+    assert(tex_file);
+    assert(node);
+
+    fprintf(tex_file, "\\arcsin");
     fprintf(tex_file, "(");
     TexDumpNode(tex_file, node->left);
     fprintf(tex_file, ")");

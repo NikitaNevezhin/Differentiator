@@ -21,6 +21,8 @@
 #define     _SIN(left)          NewNode(OP, (NodeVal){.op_type = SIN},  left, NULL)
 #define     _COS(left)          NewNode(OP, (NodeVal){.op_type = COS},  left, NULL)
 
+#define     _SQRT(left)         _POW(CopySubtree(left), _NUM(0.5))
+
 #define     _DL                 Diff(node->left, diff_var)
 #define     _DR                 Diff(node->right, diff_var)
 

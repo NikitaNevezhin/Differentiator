@@ -64,3 +64,15 @@ double CalcLn(double a, double b)
     (void)b;
     return log(a);
 }
+
+double CalcArcsin(double a, double b)
+{
+    (void)b;
+    if (fabs(a) >= 1)
+    {
+        PRINT_RED("Invalid argument for arcsin - expected num from [-1;1]\n");
+        return NAN;
+    }
+    
+    return asin(a);
+}

@@ -7,9 +7,13 @@
 
 #define ACCURACY 10e-6
 
-bool IsFloatEqual (const double x, const double y);
+bool    IsFloatEqual   (const double x1, const double x2);
 
-bool IsGreater  (const double x1, const double x2);
+bool    IsGreater      (const double x1, const double x2);
+
+bool    IsInt          (const double x);
+
+bool    IsNatural      (const double x);
 
 
 #endif
