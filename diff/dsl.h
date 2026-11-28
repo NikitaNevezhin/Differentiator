@@ -20,6 +20,12 @@
 
 #define     _SIN(left)          NewNode(OP, (NodeVal){.op_type = SIN},  left, NULL)
 #define     _COS(left)          NewNode(OP, (NodeVal){.op_type = COS},  left, NULL)
+#define     _TAN(left)          NewNode(OP, (NodeVal){.op_type = TAN},  left, NULL)
+
+#define     _SINH(left)         NewNode(OP, (NodeVal){.op_type = SINH}, left, NULL)
+#define     _COSH(left)         NewNode(OP, (NodeVal){.op_type = COSH}, left, NULL)
+#define     _TANH(left)         NewNode(OP, (NodeVal){.op_type = TANH}, left, NULL)
+
 
 #define     _SQRT(left)         _POW(CopySubtree(left), _NUM(0.5))
 

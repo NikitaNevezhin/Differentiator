@@ -32,4 +32,10 @@ double      CalcArccos     (double a, double b);
 
 double      CalcArctan     (double a, double b);
 
+double      CalcSinh       (double a, double b);
+
+double      CalcCosh       (double a, double b);
+
+double      CalcTanh       (double a, double b);
+
 #endif

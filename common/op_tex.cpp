@@ -203,3 +203,42 @@ int TexDumpArctan(FILE* tex_file, Node* node)
 
     return 0;
 }
+
+int TexDumpSinh(FILE* tex_file, Node* node)
+{
+    assert(tex_file);
+    assert(node);
+
+    fprintf(tex_file, "\\sinh");
+    fprintf(tex_file, "(");
+    TexDumpNode(tex_file, node->left);
+    fprintf(tex_file, ")");
+
+    return 0;
+}
+
+int TexDumpCosh(FILE* tex_file, Node* node)
+{
+    assert(tex_file);
+    assert(node);
+
+    fprintf(tex_file, "\\cosh");
+    fprintf(tex_file, "(");
+    TexDumpNode(tex_file, node->left);
+    fprintf(tex_file, ")");
+
+    return 0;
+}
+
+int TexDumpTanh(FILE* tex_file, Node* node)
+{
+    assert(tex_file);
+    assert(node);
+
+    fprintf(tex_file, "\\tanh");
+    fprintf(tex_file, "(");
+    TexDumpNode(tex_file, node->left);
+    fprintf(tex_file, ")");
+
+    return 0;
+}

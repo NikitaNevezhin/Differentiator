@@ -37,4 +37,10 @@ int     TexDumpArccos       (FILE* tex_file, Node* node);
 
 int     TexDumpArctan       (FILE* tex_file, Node* node);
 
+int     TexDumpSinh         (FILE* tex_file, Node* node);
+
+int     TexDumpCosh         (FILE* tex_file, Node* node);
+
+int     TexDumpTanh         (FILE* tex_file, Node* node);
+
 #endif

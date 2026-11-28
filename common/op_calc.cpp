@@ -92,6 +92,23 @@ double CalcArccos(double a, double b)
 double CalcArctan(double a, double b)
 {
     (void)b;
-
     return atan(a);
+}
+
+double CalcSinh(double a, double b)
+{
+    (void)b;
+    return sinh(a);
+}
+
+double CalcCosh(double a, double b)
+{
+    (void)b;
+    return cosh(a);
+}
+
+double CalcTanh(double a, double b)
+{
+    (void)b;
+    return tanh(a);
 }

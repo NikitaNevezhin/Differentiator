@@ -93,3 +93,21 @@ Node* DiffArctan(const Node* node, VarIdx diff_var)
     assert(node);
     return _MUL(_DL, _DIV(_NUM(1), _ADD(_NUM(1), _POW(_CL, _NUM(2))))); // (arctan(f))' = 1 / (1 + f^2) * f'
 }
+
+Node* DiffSinh(const Node* node, VarIdx diff_var)
+{
+    assert(node);
+    return _MUL(_DL, _COSH(_CL)); // (sinh(f))' = cosh(f) * f'
+}
+
+Node* DiffCosh(const Node* node, VarIdx diff_var)
+{
+    assert(node);
+    return _MUL(_DL, _SINH(_CL)); // (cosh(f))' = sinh(f) * f'
+}
+
+Node* DiffTanh(const Node* node, VarIdx diff_var)
+{
+    assert(node);
+    return _MUL(_DL, _DIV(_NUM(1), _POW(_COSH(_CL), _NUM(2)))); // (tanh(f))' = 1 / ((cosh(f)) ^ 2) * f'
+}

@@ -34,4 +34,10 @@ Node*    DiffArccos     (const Node* node, VarIdx diff_var);
 
 Node*    DiffArctan     (const Node* node, VarIdx diff_var);
 
+Node*    DiffSinh       (const Node* node, VarIdx diff_var);
+
+Node*    DiffCosh       (const Node* node, VarIdx diff_var);
+
+Node*    DiffTanh       (const Node* node, VarIdx diff_var);
+
 #endif
