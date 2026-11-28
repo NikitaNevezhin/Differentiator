@@ -33,4 +33,7 @@ int     TexDumpLn           (FILE* tex_file, Node* node);
 
 int     TexDumpArcsin       (FILE* tex_file, Node* node);
 
+int     TexDumpArccos       (FILE* tex_file, Node* node);
+
+
 #endif

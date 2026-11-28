@@ -28,5 +28,6 @@ double      CalcLn         (double a, double b);
             
 double      CalcArcsin     (double a, double b);
 
+double      CalcArccos     (double a, double b);
 
 #endif

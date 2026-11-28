@@ -177,3 +177,16 @@ int TexDumpArcsin(FILE* tex_file, Node* node)
 
     return 0;
 }
+
+int TexDumpArccos(FILE* tex_file, Node* node)
+{
+    assert(tex_file);
+    assert(node);
+
+    fprintf(tex_file, "\\arccos");
+    fprintf(tex_file, "(");
+    TexDumpNode(tex_file, node->left);
+    fprintf(tex_file, ")");
+
+    return 0;
+}

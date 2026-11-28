@@ -81,3 +81,9 @@ Node* DiffArcsin(const Node* node, VarIdx diff_var)
     assert(node);
     return _MUL(_DL, _DIV(_NUM(1), _SQRT(_SUB(_NUM(1), _POW(_CL, _NUM(2)))))); // (arcsin(f))' = 1/sqrt(1 - f^2) * f'
 }
+
+Node* DiffArccos(const Node* node, VarIdx diff_var)
+{
+    assert(node);
+    return _NEG(DiffArcsin(node, diff_var)); // (arccos(f))' = -(arcsin(f))'
+}

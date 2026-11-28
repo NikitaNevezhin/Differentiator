@@ -23,7 +23,7 @@ double CalcDiv(double a, double b)
 {
     if (IsFloatEqual(b, 0))
     {
-        PRINT_RED("Zeror division error in %s\n", __func__);
+        PRINT_RED("Zero division error in %s\n", __func__);
         return NAN;
     }
 
@@ -75,4 +75,16 @@ double CalcArcsin(double a, double b)
     }
     
     return asin(a);
+}
+
+double CalcArccos(double a, double b)
+{
+    (void)b;
+    if (fabs(a) >= 1)
+    {
+        PRINT_RED("Invalid argument for arcscos - expected num form [-1;1]\n");
+        return NAN;
+    }
+
+    return acos(a);
 }

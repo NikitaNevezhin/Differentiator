@@ -23,16 +23,17 @@
 // and your command will be ready to be used
 
 const OpInfo OP_TABLE[TOTAL_OPS] =
-{
-    {ADD,   "+", "ADD", 2,      CalcAdd, DiffAdd, TexDumpAdd},              // USER!!!!!!!!!!!
-    {SUB,   "-", "SUB", 2,      CalcSub, DiffSub, TexDumpSub},              // DONT CHANGE THE ORDER!!!!!
-    {MUL,   "*", "MUL", 2,      CalcMul, DiffMul, TexDumpMul},              // GET THE FUCK OUT!!!!!!!!!!
-    {DIV,   "/", "DIV", 2,      CalcDiv, DiffDiv, TexDumpDiv},              // please
-    {POW,   "^", "POW", 2,      CalcPow, DiffPow, TexDumpPow},
-    {SIN, "sin", "SIN", 1,      CalcSin, DiffSin, TexDumpSin},
-    {COS, "cos", "COS", 1,      CalcCos, DiffCos, TexDumpCos},
-    {TAN, "tan", "TAN", 1,      CalcTan, DiffTan, TexDumpTan},
-    {COT, "cot", "COT", 1,      CalcCot, DiffCot, TexDumpCot},
-    {LN,   "ln",  "LN", 1,      CalcLn,   DiffLn,  TexDumpLn},
-    {ARCSIN, "arcsin", "ARCSIN", 1, CalcArcsin, DiffArcsin, TexDumpArcsin}
+{   
+    {ADD,         "+",    "ADD", 2,         CalcAdd,    DiffAdd,    TexDumpAdd},              // USER!!!!!!!!!!!
+    {SUB,         "-",    "SUB", 2,         CalcSub,    DiffSub,    TexDumpSub},              // DONT CHANGE THE ORDER!!!!!
+    {MUL,         "*",    "MUL", 2,         CalcMul,    DiffMul,    TexDumpMul},              // GET THE FUCK OUT!!!!!!!!!!
+    {DIV,         "/",    "DIV", 2,         CalcDiv,    DiffDiv,    TexDumpDiv},              // please
+    {POW,         "^",    "POW", 2,         CalcPow,    DiffPow,    TexDumpPow},
+    {SIN,       "sin",    "SIN", 1,         CalcSin,    DiffSin,    TexDumpSin},
+    {COS,       "cos",    "COS", 1,         CalcCos,    DiffCos,    TexDumpCos},
+    {TAN,       "tan",    "TAN", 1,         CalcTan,    DiffTan,    TexDumpTan},
+    {COT,       "cot",    "COT", 1,         CalcCot,    DiffCot,    TexDumpCot},
+    {LN,         "ln",     "LN", 1,          CalcLn,     DiffLn,     TexDumpLn},
+    {ARCSIN, "arcsin", "ARCSIN", 1,      CalcArcsin, DiffArcsin, TexDumpArcsin},
+    {ARCCOS, "arccos", "ARCCOS", 1,      CalcArccos, DiffArccos, TexDumpArccos}
 };

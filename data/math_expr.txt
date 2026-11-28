@@ -1,1 +1,1 @@
-arcsin(sin(x))
+arccos(x) + arcsin(x)
